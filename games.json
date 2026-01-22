@@ -1,0 +1,20 @@
+[
+  {
+    "id": "teGame",
+    "name": "Кликер",
+    "description": "Кликай как можно быстрее!",
+    "enabled": true
+  },
+  {
+    "id": "memory",
+    "name": "Память",
+    "description": "Найди все пары карточек",
+    "enabled": true
+  },
+  {
+    "id": "snake",
+    "name": "Змейка",
+    "description": "Классическая змейка",
+    "enabled": false
+  }
+]
