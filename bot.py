@@ -7,7 +7,7 @@ from aiogram.filters import Command
 import asyncio
 
 # === НАСТРОЙКИ ===
-BOT_TOKEN = "8115281048:AAHcEgLSaRd6OjjZ6KJC9z4ZjJ8m9lWLtfw"  # Замени на свой токен
+BOT_TOKEN = os.getenv("8115281048:AAHcEgLSaRd6OjjZ6KJC9z4ZjJ8m9lWLtfw")  # Замени на свой токен
 DOMAIN = "rujakara.github.io"
 GAME_PATH = "telegram-Games/teGame/Index.html"
 # === ПУТИ К ФАЙЛАМ ===
