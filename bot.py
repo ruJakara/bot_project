@@ -4,7 +4,20 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.filters import Command
+from aiohttp import web
 import asyncio
+
+async def handle(request):
+    return web.Response(text="Bot is running!")
+
+async def start_server():
+    app = web.Application()
+    app.add_routes([web.get('/', handle)])
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", int(os.getenv("PORT", 10000)))
+    await site.start()
+
 
 # === НАСТРОЙКИ ===
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # Замени на свой токен
@@ -195,6 +208,7 @@ async def handle_web_app_data(message: Message):
 # === ЗАПУСК БОТА ===
 
 async def main():
+    await start_server()
     print("🤖 Бот запущен!")
     await dp.start_polling(bot)
 
