@@ -1,1 +1,6 @@
 aiogram==3.4.1
+aiohttp
+SQLAlchemy
+alembic
+python-dotenv
+aiosqlite

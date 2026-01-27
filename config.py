@@ -15,6 +15,7 @@ class Settings:
     database_url: str
     render_url: str | None
     webhook_secret: str
+    default_client_phone: str | None
 
 
 def get_settings() -> Settings:
@@ -34,6 +35,7 @@ def get_settings() -> Settings:
 
     render_url = os.getenv("RENDER_URL")
     webhook_secret = os.getenv("WEBHOOK_SECRET", "bot-webhook")
+    default_client_phone = os.getenv("ALFACRM_DEFAULT_PHONE")
 
     return Settings(
         bot_token=bot_token,
@@ -42,5 +44,6 @@ def get_settings() -> Settings:
         database_url=database_url,
         render_url=render_url,
         webhook_secret=webhook_secret,
+        default_client_phone=default_client_phone,
     )
 

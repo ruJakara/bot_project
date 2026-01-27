@@ -1,20 +1,56 @@
 [
   {
-    "id": "teGame",
-    "name": "Кликер",
-    "description": "Кликай как можно быстрее!",
+    "id": "dasha_tg",
+    "name": "Кликер Даши",
+    "description": "Игра ученицы Даши из папки teGame/dasha tg",
     "enabled": true
   },
   {
-    "id": "memory",
-    "name": "Память",
-    "description": "Найди все пары карточек",
+    "id": "hopertg",
+    "name": "Кликер Хопера",
+    "description": "Игра ученика Hopertg из папки teGame/Hopertg",
     "enabled": true
   },
   {
-    "id": "snake",
-    "name": "Змейка",
-    "description": "Классическая змейка",
-    "enabled": false
+    "id": "igra_tg_tamur",
+    "name": "Игра Тамура",
+    "description": "Игра ученика Тамура из папки teGame/igra tg tamur",
+    "enabled": true
+  },
+  {
+    "id": "kristina",
+    "name": "Игра Кристины",
+    "description": "Игра ученицы Кристины из папки teGame/kristina",
+    "enabled": true
+  },
+  {
+    "id": "lexa_puzzle",
+    "name": "Головоломка Лёши",
+    "description": "Игра из папки teGame/lexa_tg_bot_games/головоломка",
+    "enabled": true
+  },
+  {
+    "id": "lexa_clicker",
+    "name": "Кликер Лёши",
+    "description": "Игра из папки teGame/lexa_tg_bot_games/кликер",
+    "enabled": true
+  },
+  {
+    "id": "rpuk_tg",
+    "name": "Игра Rpuk",
+    "description": "Игра из папки teGame/Rpuk.tg",
+    "enabled": true
+  },
+  {
+    "id": "sapep",
+    "name": "Сапёр",
+    "description": "Игра sapep из папки teGame/sapep",
+    "enabled": true
+  },
+  {
+    "id": "tonya_tg",
+    "name": "Игра Тони",
+    "description": "Игра ученицы Тони из папки teGame/tonyaTG",
+    "enabled": true
   }
 ]
