@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Маджонг: Древние Символы</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Начальный экран -->
+        <div id="start-screen" class="screen">
+            <h1>⚔️ Маджонг: Древние Символы ⚔️</h1>
+            <div class="levels-preview">
+                <div class="level-badge">Уровень 1: Дракон</div>
+                <div class="level-badge">Уровень 2: Стихии</div>
+                <div class="level-badge">Уровень 3: Мастер</div>
+            </div>
+            <p>Соединяйте доступные плитки<br>с одинаковыми символами</p>
+            <div class="warning">
+                ⚠️ Только открытые плитки можно выбирать
+            </div>
+            <button id="start-button">Начать Испытание</button>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen" style="display:none;">
+            <div id="game-header">
+                <div class="level-indicator">📜 Уровень <span id="current-level">1</span> из 3</div>
+                <div class="timer">⏳ Время: <span id="timer">60</span>с</div>
+                <div class="score">💰 Счёт: <span id="score">0</span></div>
+            </div>
+            <div id="game-board"></div>
+            <div id="selection-status">Выбери первую плитку</div>
+            <div id="level-description"></div>
+        </div>
+
+        <!-- Экран результата -->
+        <div id="result-screen" class="screen" style="display:none;">
+            <h2>🎉 Великая Победа! 🎉</h2>
+            <div class="trophy">🏆</div>
+            <p>Ты прошел все испытания древних мастеров!</p>
+            
+            <div class="result-summary">
+                <div>💰 Общий счёт: <span id="total-score">0</span></div>
+                <div>✅ Всего пар: <span id="total-pairs">0</span></div>
+                <div>⏱️ Затраченное время: <span id="total-time">0</span>с</div>
+                <div>⛔ Всего штрафов: <span id="total-penalties">0</span></div>
+            </div>
+            
+            <div class="level-results">
+                <h3>📜 Результаты Испытаний:</h3>
+                <div id="level-results-container"></div>
+            </div>
+            
+            <div class="result-buttons">
+                <button id="submit-button">Отправить Результат</button>
+                <button id="restart-button">Новое Испытание</button>
+            </div>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

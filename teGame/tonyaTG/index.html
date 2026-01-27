@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Три в ряд - Telegram игра</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Стартовый экран -->
+        <div id="start-screen" class="screen">
+            <div class="logo">✨</div>
+            <h1>ТРИ В РЯД</h1>
+            <p>Собери как можно больше совпадений за 60 секунд!</p>
+            
+            <div class="instructions">
+                <ul>
+                    <li>Кликай на фишку, чтобы выделить её</li>
+                    <li>Кликай на соседнюю фишку, чтобы поменять их местами</li>
+                    <li>Собирай линии из 3+ одинаковых фишек</li>
+                    <li>Чем длиннее линия, тем больше очков!</li>
+                </ul>
+            </div>
+            
+            <button id="start-btn" class="btn">
+                <i class="fas fa-play"></i> НАЧАТЬ ИГРУ
+            </button>
+            
+            <div class="creator-info">
+                создал: <span>Тимурчик 7 лет</span>
+            </div>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-header">
+                <div class="timer">
+                    <i class="fas fa-clock"></i> Время: <span id="time-left">60</span>с
+                </div>
+                <div class="score">
+                    <i class="fas fa-star"></i> Очки: <span id="current-score">0</span>
+                </div>
+            </div>
+            
+            <h2>Собери три в ряд!</h2>
+            
+            <div id="game-board" class="game-board">
+                <!-- Игровое поле будет создано динамически -->
+            </div>
+            
+            <button id="menu-btn" class="btn btn-secondary">
+                <i class="fas fa-home"></i> В МЕНЮ
+            </button>
+        </div>
+        
+        <!-- Экран результата -->
+        <div id="result-screen" class="screen hidden">
+            <h1>ИГРА ОКОНЧЕНА!</h1>
+            <h2>Ваш результат:</h2>
+            
+            <div class="result-score" id="final-score">0</div>
+            
+            <div class="stars">
+                <div class="star"><i class="fas fa-star"></i></div>
+                <div class="star"><i class="fas fa-star"></i></div>
+                <div class="star"><i class="fas fa-star"></i></div>
+            </div>
+            
+            <p>Отправь свой результат друзьям!</p>
+            
+            <button id="send-btn" class="btn">
+                <i class="fas fa-paper-plane"></i> ОТПРАВИТЬ РЕЗУЛЬТАТ
+            </button>
+            
+            <button id="restart-btn" class="btn btn-secondary">
+                <i class="fas fa-redo"></i> ИГРАТЬ СНОВА
+            </button>
+            
+            <button id="menu-btn-2" class="btn btn-secondary">
+                <i class="fas fa-home"></i> В МЕНЮ
+            </button>
+            
+            <div class="creator-info">
+                создал: <span>Тимурчик 7 лет</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Подключаем скрипты -->
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

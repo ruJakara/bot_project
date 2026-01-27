@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Aim Trainer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="game.js" defer></script>
+</head>
+<body>
+    <div class="screen-container">
+        <!-- Стартовый экран -->
+        <div id="startScreen" class="screen active">
+            <div class="screen-content">
+                <h1>🎯 Aim Trainer</h1>
+                <p>Тренируй реакцию 60 сек!</p>
+                
+                <!-- Табы цветов -->
+                <div class="color-tabs">
+                    <button class="tab-btn active" data-tab="soft">Нежные</button>
+                    <button class="tab-btn" data-tab="bright">Яркие</button>
+                </div>
+                
+                <!-- Меню цветов -->
+                <div id="colorTabsContent">
+                    <!-- Нежные цвета -->
+                    <div id="softColors" class="color-menu active">
+                        <div class="gradient-btn active" data-gradient="0"></div>
+                        <div class="gradient-btn" data-gradient="1"></div>
+                        <div class="gradient-btn" data-gradient="2"></div>
+                        <div class="gradient-btn" data-gradient="3"></div>
+                        <div class="gradient-btn" data-gradient="4"></div>
+                    </div>
+                    
+                    <!-- Яркие цвета -->
+                    <div id="brightColors" class="color-menu">
+                        <div class="gradient-btn" data-gradient="5"></div>
+                        <div class="gradient-btn" data-gradient="6"></div>
+                        <div class="gradient-btn" data-gradient="7"></div>
+                        <div class="gradient-btn" data-gradient="8"></div>
+                        <div class="gradient-btn" data-gradient="9"></div>
+                    </div>
+                </div>
+                
+                <button id="playBtn" class="main-btn">🚀 ТРЕНУЙСЯ</button>
+            </div>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="gameScreen" class="screen hidden">
+            <div class="game-hud">
+                <div class="hud-item">
+                    <span id="score">0</span>
+                    <small>Очки</small>
+                </div>
+                <div class="hud-item">
+                    <span id="timer">60</span>
+                    <small>сек</small>
+                </div>
+                <div class="hud-item">
+                    <span id="misses">0</span>
+                    <small>Промахи</small>
+                </div>
+                <div class="hud-item">
+                    <span id="accuracy">100%</span>
+                    <small>Точность</small>
+                </div>
+            </div>
+            <div id="clickZone" class="click-target">
+                🎯<br><span id="clickCount">0</span>
+            </div>
+        </div>
+
+        <!-- Экран результата -->
+        <div id="resultScreen" class="screen hidden">
+            <div class="screen-content">
+                <h2>🎉 Тренировка окончена!</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span id="finalScore">0</span>
+                        <div>Очки</div>
+                    </div>
+                    <div class="stat-item">
+                        <span id="finalClicks">0</span>
+                        <div>Клики</div>
+                    </div>
+                    <div class="stat-item">
+                        <span id="finalMisses">0</span>
+                        <div>Промахи</div>
+                    </div>
+                    <div class="stat-item">
+                        <span id="finalAccuracy">0%</span>
+                        <div>Точность</div>
+                    </div>
+                </div>
+                <button id="restartBtn" class="main-btn">ТРЕНУЙСЯ ЕЩЁ</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

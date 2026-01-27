@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪙 Кликер Тимура</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- МЕНЮ -->
+    <div id="menu" class="screen active">
+        <h1>🪙 Кликер Тимура</h1>
+        <p class="author">Игру делал: <strong>Тимур, 14 лет</strong></p>
+        <button id="startBtn">🚀 НАЧАТЬ ИГРУ</button>
+    </div>
+
+    <!-- ИГРА -->
+    <div id="game" class="screen">
+        <div class="stats">
+            <div>🪙 <span id="coins">0</span></div>
+            <div>⚡ <span id="clickPower">1</span></div>
+            <div>📦 <span id="itemsOwned">0</span>/100</div>
+        </div>
+        
+        <div id="clickArea" class="click-area">
+            <div class="coin">🪙</div>
+        </div>
+        
+        <button id="shopBtn">🛒 МАГАЗИН (100 предметов)</button>
+        <button id="rebirthBtn" style="display:none;">
+            🔄 ПЕРЕРОДИТЬСЯ (100B)
+        </button>
+        
+        <!-- МАГАЗИН -->
+        <div id="shop" class="shop hidden">
+            <button id="shopClose">← Назад в игру</button>
+            <div id="shopItems" class="shop-grid"></div>
+        </div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <div id="result" class="screen">
+        <h1>🏆 РЕКОРД!</h1>
+        <div class="final-score">Монеты: <span id="finalCoins">0</span></div>
+        <div class="achieve-text">Тимур - легенда кликера!</div>
+        <button id="restartBtn">🔄 Новая игра</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+    <script src="api.js"></script>
+</body>
+</html>
