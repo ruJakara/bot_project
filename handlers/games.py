@@ -57,9 +57,7 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
 
 
 def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
-    # url = f"https://{settings.render_url}/games/{game_id}/index.html?session_id={session_id}"
-    url = f"https://{settings.domain}/{settings.game_path}?gameid={game_id}&sessionid={session_id}"
-    return InlineKeyboardMarkup(
+ url = f"https://{settings.render_url}/teGame/index.html?gameid={game_id}&sessionid={session_id}"
         inline_keyboard=[
             [
                 InlineKeyboardButton(
