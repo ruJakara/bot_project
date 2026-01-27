@@ -34,11 +34,8 @@ class GameResultPayload(TypedDict):
 def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📦 Каталог")],
-            [KeyboardButton(text="🎮 Играть")],
-            [KeyboardButton(text="💰 Счета")],
-            [KeyboardButton(text="💬 Чат с школой")],
-            [KeyboardButton(text="🏆 Лидерборд")],
+            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="💰 Счета")],
+            [KeyboardButton(text="💬 Чат"), KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
     )
@@ -60,7 +57,8 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
 
 
 def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
-    url = f"https://{settings.render_url}/games/{game_id}/index.html?session_id={session_id}"
+    # url = f"https://{settings.render_url}/games/{game_id}/index.html?session_id={session_id}"
+    url = f"https://{settings.domain}/{settings.game_path}?gameid={game_id}&sessionid={session_id}"
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -175,6 +173,7 @@ async def handle_web_app_data(message: Message) -> None:
     )
 
 
+@router.message(Command("leaderboard"))
 @router.message(F.text == "🏆 Лидерборд")
 async def leaderboard(message: Message) -> None:
     async with AsyncSessionLocal() as session:

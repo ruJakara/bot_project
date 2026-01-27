@@ -41,9 +41,24 @@ async def on_shutdown() -> None:
     await bot.session.close()
 
 
+async def crm_webhook(request: web.Request) -> web.Response:
+    try:
+        data = await request.json()
+        chat_id = data.get('chat_id')
+        text = data.get('text')
+        if chat_id and text:
+            await bot.send_message(chat_id, text)
+        return web.json_response({"status": "ok"})
+    except Exception:
+        logger.exception("Webhook error")
+        return web.json_response({"status": "error"}, status=500)
+
+
 def create_app() -> web.Application:
     app = web.Application()
     webhook_path = f"/{settings.webhook_secret}"
+
+    app.router.add_post('/crm-webhook', crm_webhook)
 
     SimpleRequestHandler(dp, bot).register(app, path=webhook_path)
     setup_application(app, dp, bot=bot)

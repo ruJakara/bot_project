@@ -6,7 +6,9 @@ from typing import Any, Dict, Optional, TypedDict
 import aiohttp
 from aiogram import F, Router
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from config import get_settings
 
@@ -14,6 +16,10 @@ from config import get_settings
 logger = logging.getLogger(__name__)
 router = Router(name="crm")
 settings = get_settings()
+
+
+class InvoiceStates(StatesGroup):
+    waiting_for_amount = State()
 
 
 class AlfaCrmClient(TypedDict):
@@ -138,6 +144,74 @@ async def invoice_command(message: Message) -> None:
         text += f"\nСсылка для оплаты: {link}"
 
     await message.answer(text)
+
+
+@router.message(Command("clients"))
+@router.message(F.text == "💰 Счета")
+async def list_clients(message: Message) -> None:
+    try:
+        data = await alfacrm_get("/clients")
+        items = data if isinstance(data, list) else data.get("items") or data.get("data") or []
+        
+        if not items:
+            await message.answer("Клиенты не найдены.")
+            return
+
+        buttons = []
+        for client in items:
+            c_id = client.get("id")
+            name = client.get("name", "Без имени")
+            buttons.append([InlineKeyboardButton(text=name, callback_data=f"client:{c_id}")])
+        
+        # Limit to 10
+        buttons = buttons[:10]
+        
+        await message.answer("Выберите клиента для выставления счета:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
+    except Exception:
+        logger.exception("Error listing clients")
+        await message.answer("Ошибка при получении списка клиентов.")
+
+
+@router.callback_query(F.data.startswith("client:"))
+async def client_selected(callback: CallbackQuery, state: FSMContext) -> None:
+    client_id = callback.data.split(":")[1]
+    await state.update_data(client_id=client_id)
+    await state.set_state(InvoiceStates.waiting_for_amount)
+    await callback.message.answer("Введите сумму счета:")
+    await callback.answer()
+
+
+@router.message(InvoiceStates.waiting_for_amount)
+async def process_invoice_amount(message: Message, state: FSMContext) -> None:
+    try:
+        amount = int(message.text)
+    except ValueError:
+        await message.answer("Пожалуйста, введите число.")
+        return
+
+    data = await state.get_data()
+    client_id = int(data["client_id"])
+    
+    payload: AlfaCrmInvoiceRequest = {
+        "client_id": client_id,
+        "sum": amount,
+        "desc": "Оплата через бот",
+    }
+    
+    try:
+        response = await alfacrm_post("/invoices", json_data=payload)
+        invoice_id = response.get("id") or response.get("invoice_id")
+        link = response.get("link") or response.get("url")
+        
+        text = f"Счет #{invoice_id} на {amount} руб. создан."
+        if link:
+            text += f"\nСсылка: {link}"
+            
+        await message.answer(text)
+        await state.clear()
+    except Exception:
+        logger.exception("Error creating invoice")
+        await message.answer("Не удалось создать счет в AlfaCRM.")
 
 
 @router.message(F.text & ~Command(commands=["start", "invoice", "счет"]))

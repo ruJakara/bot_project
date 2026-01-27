@@ -16,6 +16,8 @@ class Settings:
     render_url: str | None
     webhook_secret: str
     default_client_phone: str | None
+    domain: str = "rujakara.github.io"
+    game_path: str = "telegram-GamesteGameIndex.html"
 
 
 def get_settings() -> Settings:
