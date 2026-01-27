@@ -6,6 +6,7 @@ import os
 
 from aiohttp import web
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 
 from config import get_settings
@@ -18,8 +19,8 @@ logger = logging.getLogger(__name__)
 
 
 settings = get_settings()
-bot = Bot(token=settings.bot_token, parse_mode="HTML")
-dp = Dispatcher()
+bot = Bot(token=settings.bot_token)
+dp = Dispatcher(storage=MemoryStorage())
 dp.include_router(games.router)
 dp.include_router(crm.router)
 
