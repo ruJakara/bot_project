@@ -214,8 +214,12 @@ async def process_invoice_amount(message: Message, state: FSMContext) -> None:
         await message.answer("Не удалось создать счет в AlfaCRM.")
 
 
-@router.message(F.text & ~Command(commands=["start", "invoice", "счет"]))
+@router.message(F.text)
 async def crm_chat_message(message: Message) -> None:
+    # игнорируем команды, чтобы не ловить /start и /invoice
+    if message.text.startswith("/"):
+        return
+
     """
     Любое текстовое сообщение пересылаем в чат клиента AlfaCRM.
     Используется клиент из ALFACRM_DEFAULT_PHONE.
