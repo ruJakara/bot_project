@@ -57,11 +57,35 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
 
 
 def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
- url = f"https://{settings.render_url}/teGame/index.html?gameid={game_id}&sessionid={session_id}"
+    # Маппинг ID игры -> путь к файлу на GitHub Pages
+    # Base URL: https://rujakara.github.io/
+    game_paths = {
+        "dasha_tg": "teGame/dasha tg/index.html",
+        "hopertg": "teGame/Hopertg/index.html",
+        "igra_tg_tamur": "teGame/igra tg tamur/index.htm",
+        "kristina": "teGame/kristina/lndex.html",
+        "lexa_puzzle": "teGame/lexa_tg_bot_games/головоломка/index.html",
+        "lexa_clicker": "teGame/lexa_tg_bot_games/кликер/index.html",
+        "rpuk_tg": "teGame/Rpuk.tg/index.html",
+        "sapep": "teGame/sapep/index.html",
+        "tonya_tg": "teGame/tonyaTG/index.html",
+    }
+
+    # Если игры нет в маппинге, пробуем дефолтный путь (на всякий случай)
+    game_path = game_paths.get(game_id, f"teGame/{game_id}/index.html")
+    
+    # Формируем полный URL
+    # https://rujakara.github.io/teGame/Hopertg/index.html?sessionid=...
+    url = f"https://{settings.domain}/{game_path}?sessionid={session_id}"
+    
+    # Кодируем пробелы и спецсимволы, если нужно (браузер обычно справляется, но для надежности можно заменить пробелы)
+    # url = url.replace(" ", "%20") 
+
+    return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🎮 Запустить игру",
+                    text="🎮 Играть",
                     web_app=WebAppInfo(url=url),
                 )
             ]
