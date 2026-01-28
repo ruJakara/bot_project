@@ -35,7 +35,7 @@ def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="💰 Счета")],
-            [KeyboardButton(text="💬 Чат"), KeyboardButton(text="🏆 Лидерборд")],
+            [KeyboardButton(text="📝 Записаться"), KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
     )

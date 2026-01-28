@@ -16,7 +16,9 @@ class Settings:
     render_url: str | None
     webhook_secret: str
     default_client_phone: str | None
-    domain: str = "rujakara.github.io/bot_project"
+    alfacrm_branch_id: int
+    allowed_cities: list[str]
+    domain: str = "rujakara.github.io"
     game_path: str = "telegram-GamesteGameIndex.html"
 
 
@@ -38,6 +40,14 @@ def get_settings() -> Settings:
     render_url = os.getenv("RENDER_URL")
     webhook_secret = os.getenv("WEBHOOK_SECRET", "bot-webhook")
     default_client_phone = os.getenv("ALFACRM_DEFAULT_PHONE")
+    
+    try:
+        alfacrm_branch_id = int(os.getenv("ALFACRM_BRANCH_ID", "1"))
+    except ValueError:
+        alfacrm_branch_id = 1
+
+    allowed_cities_str = os.getenv("ALLOWED_CITIES", "Екатеринбург,Среднеуральск")
+    allowed_cities = [city.strip() for city in allowed_cities_str.split(",") if city.strip()]
 
     return Settings(
         bot_token=bot_token,
@@ -47,5 +57,7 @@ def get_settings() -> Settings:
         render_url=render_url,
         webhook_secret=webhook_secret,
         default_client_phone=default_client_phone,
+        alfacrm_branch_id=alfacrm_branch_id,
+        allowed_cities=allowed_cities,
     )
 
