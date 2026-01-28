@@ -16,7 +16,7 @@ class Settings:
     render_url: str | None
     webhook_secret: str
     default_client_phone: str | None
-    domain: str = "rujakara.github.io"
+    domain: str = "rujakara.github.io/bot_project"
     game_path: str = "telegram-GamesteGameIndex.html"
 
 
