@@ -1,11 +1,8 @@
 import os
 from dataclasses import dataclass
-
 from dotenv import load_dotenv
 
-
 load_dotenv()
-
 
 @dataclass
 class Settings:
@@ -18,9 +15,8 @@ class Settings:
     default_client_phone: str | None
     alfacrm_branch_id: int
     allowed_cities: list[str]
-    domain: str = "rujakara.github.io/bot_project/"
-    game_path: str = "telegram-GamesteGameIndex.html"
-
+    domain: str
+    game_paths: dict[str, str]
 
 def get_settings() -> Settings:
     bot_token = os.getenv("BOT_TOKEN", "")
@@ -49,6 +45,21 @@ def get_settings() -> Settings:
     allowed_cities_str = os.getenv("ALLOWED_CITIES", "Екатеринбург,Среднеуральск")
     allowed_cities = [city.strip() for city in allowed_cities_str.split(",") if city.strip()]
 
+    domain = os.getenv("DOMAIN", "rujakara.github.io/bot_project")
+    
+    # Default game paths mapping
+    game_paths = {
+        "dasha_tg": "teGame/dasha tg/index.html",
+        "hopertg": "teGame/Hopertg/index.html",
+        "igra_tg_tamur": "teGame/igra tg tamur/index.htm",
+        "kristina": "teGame/kristina/lndex.html",
+        "lexa_puzzle": "teGame/lexa_tg_bot_games/головоломка/index.html",
+        "lexa_clicker": "teGame/lexa_tg_bot_games/кликер/index.html",
+        "rpuk_tg": "teGame/Rpuk.tg/index.html",
+        "sapep": "teGame/sapep/index.html",
+        "tonya_tg": "teGame/tonyaTG/index.html",
+    }
+
     return Settings(
         bot_token=bot_token,
         alfacrm_domain=alfacrm_domain,
@@ -59,5 +70,6 @@ def get_settings() -> Settings:
         default_client_phone=default_client_phone,
         alfacrm_branch_id=alfacrm_branch_id,
         allowed_cities=allowed_cities,
+        domain=domain,
+        game_paths=game_paths
     )
-
