@@ -264,7 +264,7 @@ async def start_enrollment(message: Message, state: FSMContext) -> None:
 
 @router.message(EnrollStates.waiting_for_city)
 async def process_city(message: Message, state: FSMContext) -> None:
-    if message.text == "🔙 Отмена":
+    /company/{branch_id}/customer/indexif message.text and message.text == "🔙 Отмена":
         await state.clear()
         from handlers.games import main_keyboard
         await message.answer("Запись отменена.", reply_markup=main_keyboard())
@@ -314,7 +314,7 @@ async def process_city(message: Message, state: FSMContext) -> None:
 @router.message(EnrollStates.waiting_for_phone, F.contact)
 @router.message(EnrollStates.waiting_for_phone, F.text)
 async def process_phone(message: Message, state: FSMContext) -> None:
-    if message.text == "🔙 Отмена":
+    if message.text and message.text == "🔙 Отмена":
         await state.clear()
         from handlers.games import main_keyboard
         await message.answer("Запись отменена.", reply_markup=main_keyboard())
@@ -381,7 +381,7 @@ async def finish_enrollment(message: Message, state: FSMContext, phone: str, nam
     # Let's try to match the prompt requirements exactly.
     # Prompt: GET /v2api/{branch}/customer/index?phone=...
     
-    search_path = f"/v2api/{branch_id}/customer/index"
+    search_path = f"/company/{branch_id}/customer/index"
     
     try:
         search_result = await alfacrm_get(search_path, params={"phone": phone})
