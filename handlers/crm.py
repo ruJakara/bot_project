@@ -33,6 +33,10 @@ class EnrollStates(StatesGroup):
     waiting_for_phone = State()
     waiting_for_name = State()
 
+
+class ChatStates(StatesGroup):
+    chatting = State()
+
 class AlfaCrmInvoiceRequest(TypedDict):
     client_id: int
     sum: int
@@ -230,14 +234,40 @@ async def finish_enrollment(message: Message, state: FSMContext, phone: str, nam
     finally:
         await state.clear()
 
-@router.message(F.text)
-async def crm_chat_message(message: Message) -> None:
-    if message.text.startswith("/") or message.text in ["🎮 Играть", "💰 Счета", "📝 Записаться", "🏆 Лидерборд"]:
+
+@router.message(F.text == "💬 Чат с школой")
+async def start_chat(message: Message, state: FSMContext) -> None:
+    await state.set_state(ChatStates.chatting)
+    kb = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="🔙 В меню")]],
+        resize_keyboard=True,
+    )
+    await message.answer(
+        "Напишите сообщение для школы.\n"
+        "Чтобы выйти из чата, нажмите «🔙 В меню».",
+        reply_markup=kb,
+    )
+
+
+@router.message(ChatStates.chatting, F.text)
+async def crm_chat_message(message: Message, state: FSMContext) -> None:
+    if message.text == "🔙 В меню":
+        await state.clear()
+        await message.answer("Вы вышли из чата со школой.", reply_markup=main_keyboard())
         return
+
     client_id = await get_default_client_id()
-    if client_id:
-        try:
-            await alfacrm_post("/messages", json_data={"client_id": client_id, "text": message.text})
-            await message.answer("Сообщение отправлено.")
-        except Exception:
-            pass
+    if not client_id:
+        await message.answer("Не удалось найти клиента в AlfaCRM.", reply_markup=main_keyboard())
+        await state.clear()
+        return
+
+    try:
+        await alfacrm_post(
+            "/messages",
+            json_data={"client_id": client_id, "text": message.text},
+        )
+        await message.answer("Сообщение отправлено в школу.")
+    except Exception:
+        await message.answer("Ошибка при отправке сообщения.", reply_markup=main_keyboard())
+        await state.clear()
