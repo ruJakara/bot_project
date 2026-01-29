@@ -18,7 +18,7 @@ class Settings:
     default_client_phone: str | None
     alfacrm_branch_id: int
     allowed_cities: list[str]
-    domain: str = "rujakara.github.io"
+    domain: str = "rujakara.github.io/bot_project/"
     game_path: str = "telegram-GamesteGameIndex.html"
 
 
