@@ -1,4 +1,27 @@
-    game_id = callback.data.replace("game_", "")
+    from __future__ import annotations
+
+import json
+import uuid
+from typing import Dict, List, TypedDict
+
+from aiogram import F, Router
+from aiogram.filters import Command
+from aiogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    Message,
+    ReplyKeyboardMarkup,
+    WebAppInfo,
+)
+from sqlalchemy import desc, select
+
+from config import get_settings
+from models import AsyncSessionLocal, GameScore, User
+
+
+game_id = callback.data.replace("game_", "")
     games = load_games()
     game = next((g for g in games if g["id"] == game_id), None)
     if not game:
