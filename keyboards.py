@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from aiogram.types import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -5,13 +7,13 @@ from aiogram.types import (
     ReplyKeyboardMarkup,
     WebAppInfo,
 )
-from typing import List, Dict
 
 
 def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="💰 Счета")],
+            [KeyboardButton(text="📦 Каталог"), KeyboardButton(text="🎮 Играть")],
+            [KeyboardButton(text="💰 Счета"), KeyboardButton(text="💬 Чат с школой")],
             [KeyboardButton(text="📝 Записаться"), KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
