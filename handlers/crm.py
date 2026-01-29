@@ -92,8 +92,12 @@ async def get_default_client_id() -> Optional[int]:
     if not settings.default_client_phone:
         return None
     try:
-        data = await alfacrm_get("/clients", params={"phone": settings.default_client_phone})
-        items = data if isinstance(data, list) else data.get("items") or data.get("data")
+        branch_id = settings.alfacrm_branch_id
+        data = await alfacrm_get(
+            f"/company/{branch_id}/customer/index",
+            params={"phone": settings.default_client_phone},
+        )
+        items = data if isinstance(data, list) else data.get("items") or data.get("data") or []
         if items:
             return int(items[0].get("id"))
     except Exception:
@@ -126,7 +130,8 @@ async def invoice_command(message: Message) -> None:
 @router.message(F.text == "💰 Счета")
 async def list_clients(message: Message) -> None:
     try:
-        data = await alfacrm_get("/clients")
+        branch_id = settings.alfacrm_branch_id
+        data = await alfacrm_get(f"/company/{branch_id}/customer/index")
         items = data if isinstance(data, list) else data.get("items") or data.get("data") or []
         if not items:
             await message.answer("Клиенты не найдены.")
