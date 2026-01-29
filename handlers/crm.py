@@ -264,7 +264,7 @@ async def start_enrollment(message: Message, state: FSMContext) -> None:
 
 @router.message(EnrollStates.waiting_for_city)
 async def process_city(message: Message, state: FSMContext) -> None:
-    /company/{branch_id}/customer/indexif message.text and message.text == "🔙 Отмена":
+if message.text and message.text == "🔙 Отмена":
         await state.clear()
         from handlers.games import main_keyboard
         await message.answer("Запись отменена.", reply_markup=main_keyboard())
