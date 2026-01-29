@@ -21,7 +21,112 @@ from config import get_settings
 from models import AsyncSessionLocal, GameScore, User
 
 
-game_id = callback.data.replace("game_", "")
+router = Router(name="games")
+settings = get_settings()
+
+
+class GameResultPayload(TypedDict):
+    game_id: str
+    score: int
+    duration_sec: int
+
+
+def main_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="📦 Каталог")],
+            [KeyboardButton(text="🎮 Играть")],
+            [KeyboardButton(text="💰 Счета")],
+            [KeyboardButton(text="💬 Чат с школой")],
+            [KeyboardButton(text="🏆 Лидерборд")],
+        ],
+        resize_keyboard=True,
+    )
+
+
+def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
+    buttons: List[List[InlineKeyboardButton]] = []
+    for game in games:
+        if game.get("enabled"):
+            buttons.append(
+                [
+                    InlineKeyboardButton(
+                        text=game["name"],
+                        callback_data=f"game_{game['id']}",
+                    )
+                ]
+            )
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+def build_game_url(game_id: str, session_id: str) -> str:
+    game_path = settings.game_paths.get(game_id, f"teGame/{game_id}/index.html")
+    # В HTML-играх используется параметр sessionid
+    return f"https://{settings.domain}/{game_path}?sessionid={session_id}"
+
+
+def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
+    url = build_game_url(game_id, session_id)
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🎮 Запустить игру",
+                    web_app=WebAppInfo(url=url),
+                )
+            ]
+        ]
+    )
+
+
+def load_games() -> List[Dict]:
+    with open("games.json", "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+@router.message(Command("start"))
+async def cmd_start(message: Message) -> None:
+    await message.answer(
+        "👋 Привет! Я бот школы.\n"
+        "Выбери действие в меню:",
+        reply_markup=main_keyboard(),
+    )
+
+
+@router.message(F.text == "📦 Каталог")
+async def show_catalog(message: Message) -> None:
+    games = load_games()
+    enabled_games = [g for g in games if g.get("enabled")]
+    if not enabled_games:
+        await message.answer("Пока нет доступных игр.", reply_markup=main_keyboard())
+        return
+
+    text_lines = ["📦 Каталог игр:\n"]
+    for g in enabled_games:
+        name = g.get("name", g.get("id", "Игра"))
+        desc = g.get("description", "Без описания")
+        text_lines.append(f"🎮 {name}\n   {desc}\n")
+
+    await message.answer("\n".join(text_lines), reply_markup=main_keyboard())
+
+
+@router.message(F.text == "🎮 Играть")
+async def show_games_to_play(message: Message) -> None:
+    games = load_games()
+    enabled_games = [g for g in games if g.get("enabled")]
+    if not enabled_games:
+        await message.answer("Пока нет доступных игр.", reply_markup=main_keyboard())
+        return
+
+    await message.answer(
+        "Выбери игру:",
+        reply_markup=games_keyboard(enabled_games),
+    )
+
+
+@router.callback_query(F.data.startswith("game_"))
+async def select_game(callback: CallbackQuery) -> None:
+    game_id = callback.data.replace("game_", "")
     games = load_games()
     game = next((g for g in games if g["id"] == game_id), None)
     if not game:
@@ -29,14 +134,12 @@ game_id = callback.data.replace("game_", "")
         return
 
     session_id = str(uuid.uuid4())
-    game_path = settings.game_paths.get(game_id, f"teGame/{game_id}/index.html")
-    url = f"https://{settings.domain}/{game_path}?sessionid={session_id}"
-    
     await callback.message.answer(
         f"🎮 {game['name']}\n\nНажми кнопку ниже, чтобы начать игру.",
-        reply_markup=play_game_keyboard(url),
+        reply_markup=play_game_keyboard(game_id, session_id),
     )
     await callback.answer()
+
 
 @router.message(F.web_app_data)
 async def handle_web_app_data(message: Message) -> None:
@@ -56,3 +159,48 @@ async def handle_web_app_data(message: Message) -> None:
             user = User(
                 id=message.from_user.id,
                 username=message.from_user.username,
+                games=None,
+            )
+            session.add(user)
+
+        score_row = GameScore(
+            user_id=message.from_user.id,
+            game_id=game_id,
+            score=score,
+            duration_sec=duration,
+        )
+        session.add(score_row)
+        await session.commit()
+
+    await message.answer(
+        f"🏆 Игра завершена!\n\n"
+        f"🎮 Игра: {game_id}\n"
+        f"⭐ Очки: {score}\n"
+        f"⏱ Время: {duration} сек",
+        reply_markup=main_keyboard(),
+    )
+
+
+@router.message(F.text == "🏆 Лидерборд")
+async def leaderboard(message: Message) -> None:
+    async with AsyncSessionLocal() as session:
+        stmt = (
+            select(User.username, GameScore.score, GameScore.game_id)
+            .join(GameScore, GameScore.user_id == User.id)
+            .order_by(desc(GameScore.score))
+            .limit(10)
+        )
+        result = await session.execute(stmt)
+        rows = result.all()
+
+    if not rows:
+        await message.answer("Лидерборд пока пуст.", reply_markup=main_keyboard())
+        return
+
+    text_lines = ["🏆 Лидерборд:"]
+    for i, (username, score, game_id) in enumerate(rows, start=1):
+        name = username or "Без ника"
+        text_lines.append(f"{i}. {name} — {score} ({game_id})")
+
+    await message.answer("\n".join(text_lines), reply_markup=main_keyboard())
+
