@@ -1,3 +1,3 @@
-from . import crm, games
+from . import games
 
-__all__ = ["crm", "games"]
+__all__ = ["games"]
