@@ -4,6 +4,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ALFA_BASE_URL = os.getenv("ALFA_BASE_URL", "https://<HOST>")
+ALFA_EMAIL = os.getenv("ALFA_EMAIL", "<EMAIL>")
+ALFA_API_KEY = os.getenv("ALFA_API_KEY", "<API_KEY>")
+
 @dataclass
 class Settings:
     bot_token: str

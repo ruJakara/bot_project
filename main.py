@@ -14,7 +14,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 # Let's stick to MemoryStorage for simplicity but ensure the bot is robust.
 
 from config import get_settings
-from handlers import crm, games
+import crm
+from handlers import games
 from models import init_db, migrate_users_from_json
 
 logging.basicConfig(
