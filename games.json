@@ -52,5 +52,11 @@
     "name": "Игра Тони",
     "description": "Три в ряд",
     "enabled": true
+  },
+  {
+    "id": "hacker_neon",
+    "name": "Хакер Неон",
+    "description": "Игра из папки teGame/ХАКЕР НЕОН",
+    "enabled": true
   }
 ]

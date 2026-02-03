@@ -23,7 +23,10 @@ async def main() -> None:
     dp.include_router(leads_router)
 
     logger.info("Starting bot with polling")
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
 
 
 if __name__ == "__main__":
