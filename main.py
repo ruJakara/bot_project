@@ -30,7 +30,6 @@ bot = Bot(token=settings.bot_token)
 dp = Dispatcher(storage=MemoryStorage())
 
 dp.include_router(games.router)
-dp.include_router(crm.router)
 dp.include_router(leads_router)
 
 async def on_startup() -> None:
