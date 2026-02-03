@@ -16,6 +16,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from config import get_settings
 import crm
 from handlers import games
+from handlers.leads import router as leads_router
 from models import init_db, migrate_users_from_json
 
 logging.basicConfig(
@@ -30,6 +31,7 @@ dp = Dispatcher(storage=MemoryStorage())
 
 dp.include_router(games.router)
 dp.include_router(crm.router)
+dp.include_router(leads_router)
 
 async def on_startup() -> None:
     await init_db()
