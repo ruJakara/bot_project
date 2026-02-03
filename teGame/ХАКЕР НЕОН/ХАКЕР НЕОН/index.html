@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NEON HACKER</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- СТАРТ -->
+  <div id="screen-start" class="screen active">
+    <div class="logo">💻 NEON HACKER 🔓</div>
+    
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-label">💰 ВСЕГО</div>
+        <div id="total-points" class="stat-value">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">⭐ УРОВЕНЬ</div>
+        <div id="player-level" class="stat-value">1</div>
+      </div>
+    </div>
+    
+    <button id="btn-start" class="btn big">🎮 ВЗЛОМАТЬ СЕРВЕР</button>
+    <button id="btn-shop" class="btn shop">🛒 МАГАЗИН УЛУЧШЕНИЙ</button>
+    
+    <div class="dev">Разработчик: Макс, 11 лет</div>
+  </div>
+
+  <!-- ИГРА -->
+  <div id="screen-game" class="screen">
+    <div class="hud">
+      <div class="hud-item timer">
+        <div class="hud-icon">⏱️</div>
+        <div id="timer" class="hud-value">60</div>
+      </div>
+      <div class="hud-item score">
+        <div class="hud-icon">💰</div>
+        <div id="score" class="hud-value">0</div>
+      </div>
+    </div>
+    
+    <div class="game-title">КЛИКАЙ НА ЗЕЛЁНЫЕ 🔓</div>
+    
+    <div id="buttons" class="buttons-grid"></div>
+  </div>
+
+  <!-- МАГАЗИН -->
+  <div id="screen-shop" class="screen">
+    <div class="logo">🛒 МАГАЗИН</div>
+    
+    <div class="wallet">
+      <div class="wallet-icon">💰</div>
+      <div class="wallet-text">ДОСТУПНО:</div>
+      <div id="shop-points" class="wallet-value">0</div>
+    </div>
+    
+    <div class="upgrades" id="upgrades-list">
+      <!-- Улучшения -->
+    </div>
+    
+    <button id="btn-back" class="btn back">⬅️ НАЗАД</button>
+  </div>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <div id="screen-result" class="screen">
+    <div class="logo">🎮 ВЗЛОМ ЗАВЕРШЁН!</div>
+    
+    <div class="result-card">
+      <div class="result-row">
+        <span>Заработано:</span>
+        <span id="result-score" class="result-num">0</span>
+      </div>
+      <div class="result-row">
+        <span>Всего очков:</span>
+        <span id="result-total" class="result-num">0</span>
+      </div>
+      <div class="result-row">
+        <span>Твой уровень:</span>
+        <span id="result-level" class="result-num">1</span>
+      </div>
+    </div>
+    
+    <button id="btn-shop-again" class="btn shop big">🛒 УЛУЧШИТЬСЯ</button>
+    <button id="btn-restart" class="btn big">🔄 ВЗЛОМАТЬ СНОВА</button>
+  </div>
+
+  <!-- СКРИПТЫ -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

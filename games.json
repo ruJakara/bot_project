@@ -20,25 +20,25 @@
   {
     "id": "kristina",
     "name": "Игра Кристины",
-    "description": "Игра ученицы Кристины из папки teGame/kristina",
+    "description": "Отель для хомячков",
     "enabled": true
   },
   {
     "id": "lexa_puzzle",
     "name": "Головоломка Лёши",
-    "description": "Игра из папки teGame/lexa_tg_bot_games/головоломка",
+    "description": "Головоломка с водой",
     "enabled": true
   },
   {
     "id": "lexa_clicker",
     "name": "Кликер Лёши",
-    "description": "Игра из папки teGame/lexa_tg_bot_games/кликер",
+    "description": "Кликер",
     "enabled": true
   },
   {
     "id": "rpuk_tg",
     "name": "Игра Rpuk",
-    "description": "Игра из папки teGame/Rpuk.tg",
+    "description": "Маджонг",
     "enabled": true
   },
   {
@@ -50,7 +50,7 @@
   {
     "id": "tonya_tg",
     "name": "Игра Тони",
-    "description": "Игра ученицы Тони из папки teGame/tonyaTG",
+    "description": "Три в ряд",
     "enabled": true
   }
 ]
