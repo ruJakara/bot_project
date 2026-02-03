@@ -34,11 +34,8 @@ class GameResultPayload(TypedDict):
 def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="📦 Каталог")],
-            [KeyboardButton(text="🎮 Играть")],
-            [KeyboardButton(text="💰 Счета")],
-            [KeyboardButton(text="💬 Чат с школой")],
-            [KeyboardButton(text="🏆 Лидерборд")],
+            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="💰 Счета")],
+            [KeyboardButton(text="💬 Чат"), KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
     )
@@ -59,14 +56,9 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
-def build_game_url(game_id: str, session_id: str) -> str:
-    game_path = settings.game_paths.get(game_id, f"teGame/{game_id}/index.html")
-    # В HTML-играх используется параметр sessionid
-    return f"https://{settings.domain}/{game_path}?sessionid={session_id}"
-
-
 def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
-    url = build_game_url(game_id, session_id)
+    # url = f"https://{settings.render_url}/games/{game_id}/index.html?session_id={session_id}"
+    url = f"https://{settings.render_url}/teGame/index.html?gameid={game_id}&sessionid={session_id}"
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -96,18 +88,10 @@ async def cmd_start(message: Message) -> None:
 @router.message(F.text == "📦 Каталог")
 async def show_catalog(message: Message) -> None:
     games = load_games()
-    enabled_games = [g for g in games if g.get("enabled")]
-    if not enabled_games:
-        await message.answer("Пока нет доступных игр.", reply_markup=main_keyboard())
-        return
-
-    text_lines = ["📦 Каталог игр:\n"]
-    for g in enabled_games:
-        name = g.get("name", g.get("id", "Игра"))
-        desc = g.get("description", "Без описания")
-        text_lines.append(f"🎮 {name}\n   {desc}\n")
-
-    await message.answer("\n".join(text_lines), reply_markup=main_keyboard())
+    await message.answer(
+        "Here is the catalog:",
+        reply_markup=games_keyboard(games),
+    )
 
 
 @router.message(F.text == "🎮 Играть")
@@ -181,6 +165,7 @@ async def handle_web_app_data(message: Message) -> None:
     )
 
 
+@router.message(Command("leaderboard"))
 @router.message(F.text == "🏆 Лидерборд")
 async def leaderboard(message: Message) -> None:
     async with AsyncSessionLocal() as session:
