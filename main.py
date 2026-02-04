@@ -19,6 +19,8 @@ async def start_web_server() -> web.AppRunner:
     app = web.Application()
     app.router.add_get("/", lambda request: web.Response(text="OK"))
     app.router.add_get("/health", lambda request: web.Response(text="OK"))
+    app.router.add_static("/teGame/", path="teGame", show_index=True)
+    app.router.add_static("/games/", path="games", show_index=True)
 
     runner = web.AppRunner(app)
     await runner.setup()

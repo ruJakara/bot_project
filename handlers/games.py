@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import uuid
+from urllib.parse import quote
 from typing import Dict, List, TypedDict
 
 from aiogram import F, Router
@@ -57,8 +58,12 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
 
 
 def play_game_keyboard(game_id: str, session_id: str) -> InlineKeyboardMarkup:
-    # url = f"https://{settings.render_url}/games/{game_id}/index.html?session_id={session_id}"
-    url = f"https://{settings.render_url}/teGame/index.html?gameid={game_id}&sessionid={session_id}"
+    game_path = settings.game_paths.get(game_id)
+    if not game_path:
+        url = f"https://{settings.render_url}/"
+    else:
+        safe_path = quote(game_path, safe="/")
+        url = f"https://{settings.render_url}/{safe_path}?gameid={game_id}&sessionid={session_id}"
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -115,6 +120,9 @@ async def select_game(callback: CallbackQuery) -> None:
     game = next((g for g in games if g["id"] == game_id), None)
     if not game:
         await callback.answer("Игра не найдена")
+        return
+    if game_id not in settings.game_paths:
+        await callback.answer("Путь к игре не настроен")
         return
 
     session_id = str(uuid.uuid4())

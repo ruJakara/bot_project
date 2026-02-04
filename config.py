@@ -56,12 +56,13 @@ def get_settings() -> Settings:
         "dasha_tg": "teGame/dasha tg/index.html",
         "hopertg": "teGame/Hopertg/index.html",
         "igra_tg_tamur": "teGame/igra tg tamur/index.htm",
-        "kristina": "teGame/kristina/lndex.html",
+        "kristina": "teGame/kristina/index.html",
         "lexa_puzzle": "teGame/lexa_tg_bot_games/головоломка/index.html",
         "lexa_clicker": "teGame/lexa_tg_bot_games/кликер/index.html",
         "rpuk_tg": "teGame/Rpuk.tg/index.html",
         "sapep": "teGame/sapep/index.html",
         "tonya_tg": "teGame/tonyaTG/index.html",
+        "hacker_neon": "teGame/ХАКЕР НЕОН/ХАКЕР НЕОН/index.html",
     }
 
     return Settings(
