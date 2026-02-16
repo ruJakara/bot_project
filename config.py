@@ -37,7 +37,18 @@ def get_settings() -> Settings:
         "sqlite+aiosqlite:///./bot.db",
     )
 
+    domain = os.getenv("DOMAIN", "rujakara.github.io/bot_project")
+    
+    # Use RENDER_URL if set, otherwise fallback to DOMAIN. 
+    # If neither (local dev), use localhost.
     render_url = os.getenv("RENDER_URL")
+    if not render_url:
+        render_url = domain
+
+    # Fallback to localhost if render_url is still empty/None (shouldn't happen with domain fallback)
+    if not render_url:
+        render_url = "localhost:10000"
+
     webhook_secret = os.getenv("WEBHOOK_SECRET", "bot-webhook")
     default_client_phone = os.getenv("ALFACRM_DEFAULT_PHONE")
     
@@ -49,14 +60,12 @@ def get_settings() -> Settings:
     allowed_cities_str = os.getenv("ALLOWED_CITIES", "Екатеринбург,Среднеуральск")
     allowed_cities = [city.strip() for city in allowed_cities_str.split(",") if city.strip()]
 
-    domain = os.getenv("DOMAIN", "rujakara.github.io/bot_project")
-    
     # Default game paths mapping
     game_paths = {
         "dasha_tg": "teGame/dasha tg/index.html",
         "hopertg": "teGame/Hopertg/index.html",
         "igra_tg_tamur": "teGame/igra tg tamur/index.htm",
-        "kristina": "teGame/kristina/index.html",
+        "kristina": "teGame/kristina/lndex.html",
         "lexa_puzzle": "teGame/lexa_tg_bot_games/головоломка/index.html",
         "lexa_clicker": "teGame/lexa_tg_bot_games/кликер/index.html",
         "rpuk_tg": "teGame/Rpuk.tg/index.html",
