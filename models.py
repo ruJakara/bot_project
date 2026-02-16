@@ -55,6 +55,19 @@ class Event(Base):
     event_name: Mapped[str] = mapped_column(String(100))
     meta: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # JSON string
 
+class Reminder(Base):
+    __tablename__ = "reminders"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    tg_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    tenant_id: Mapped[str] = mapped_column(String(50))
+    bot_id: Mapped[str] = mapped_column(String(50))
+    enabled: Mapped[bool] = mapped_column(Integer, default=1) # SQLite bool
+    mode: Mapped[str] = mapped_column(String(50), default="date")
+    next_remind_at: Mapped[str] = mapped_column(String(30)) # ISO string
+    created_at: Mapped[str] = mapped_column(String(30))
+    updated_at: Mapped[str] = mapped_column(String(30))
+
 engine = create_async_engine(settings.database_url, echo=False)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 

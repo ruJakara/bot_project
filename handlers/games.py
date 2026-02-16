@@ -20,6 +20,7 @@ from sqlalchemy import desc, select
 
 from config import get_settings
 from core.events import track
+from core.reminders import enable_reminder, process_due_reminders
 from models import AsyncSessionLocal, GameScore, User
 
 
@@ -36,8 +37,9 @@ class GameResultPayload(TypedDict):
 def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="🛒 Купить")],
-            [KeyboardButton(text="💬 Чат"), KeyboardButton(text="🏆 Лидерборд")],
+            [KeyboardButton(text="🎮 Играть")],
+            [KeyboardButton(text="🛒 Купить"), KeyboardButton(text="⏰ Напомнить")],
+            [KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
     )
@@ -123,6 +125,30 @@ async def cmd_buy(message: Message) -> None:
     await track("purchase.intent", message.from_user.id, {"source": "menu"})
     # Simple placeholder. Later: integrate payment link or manager contact
     await message.answer("Для оформления покупки, пожалуйста, напишите менеджеру: @manager")
+
+
+@router.message(F.text == "⏰ Напомнить")
+async def cmd_remind(message: Message) -> None:
+    # Set reminder for 6 months (default)
+    await enable_reminder(message.from_user.id, months=6)
+    await track("reminder.enabled", message.from_user.id, {"mode": "date", "months": 6, "source": "menu"})
+    await message.answer(
+        "⏰ Ок, я напомню вам через 6 месяцев.\n"
+        "Мы пришлем уведомление, когда придет время."
+    )
+
+
+@router.message(Command("send_due_reminders"))
+async def cmd_send_due_reminders(message: Message) -> None:
+    """Manual trigger to process due reminders."""
+    import os
+    admin_id = int(os.getenv("ADMIN_TG_ID", 0))
+    if message.from_user.id != admin_id:
+        await message.answer("⛔ Недоступно")
+        return
+
+    count = await process_due_reminders()
+    await message.answer(f"✅ Обработано напоминаний: {count}")
 
 
 @router.callback_query(F.data.startswith("game_"))
