@@ -44,6 +44,17 @@ class GameScore(Base):
 
     user: Mapped[User] = relationship(back_populates="scores")
 
+class Event(Base):
+    __tablename__ = "events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    ts: Mapped[str] = mapped_column(String(30))  # UTC ISO string
+    tenant_id: Mapped[str] = mapped_column(String(50))
+    bot_id: Mapped[str] = mapped_column(String(50))
+    tg_id: Mapped[str] = mapped_column(String(30))
+    event_name: Mapped[str] = mapped_column(String(100))
+    meta: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # JSON string
+
 engine = create_async_engine(settings.database_url, echo=False)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 

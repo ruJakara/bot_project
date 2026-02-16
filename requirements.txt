@@ -6,3 +6,4 @@ python-dotenv
 aiosqlite
 requests
 PyYAML
+SQLAlchemy[asyncio]

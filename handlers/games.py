@@ -19,6 +19,7 @@ from aiogram.types import (
 from sqlalchemy import desc, select
 
 from config import get_settings
+from core.events import track
 from models import AsyncSessionLocal, GameScore, User
 
 
@@ -88,6 +89,10 @@ async def cmd_start(message: Message) -> None:
         "Выбери действие в меню:",
         reply_markup=main_keyboard(),
     )
+    await track("user.started", message.from_user.id, {
+        "username": message.from_user.username,
+        "start_param": message.text.split(maxsplit=1)[1] if len(message.text.split()) > 1 else None,
+    })
 
 
 @router.message(F.text == "📦 Каталог")
