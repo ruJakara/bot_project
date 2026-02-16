@@ -36,7 +36,7 @@ class GameResultPayload(TypedDict):
 def main_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
-            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="💰 Счета")],
+            [KeyboardButton(text="🎮 Играть"), KeyboardButton(text="🛒 Купить")],
             [KeyboardButton(text="💬 Чат"), KeyboardButton(text="🏆 Лидерборд")],
         ],
         resize_keyboard=True,
@@ -118,6 +118,13 @@ async def show_games_to_play(message: Message) -> None:
     )
 
 
+@router.message(F.text == "🛒 Купить")
+async def cmd_buy(message: Message) -> None:
+    await track("purchase.intent", message.from_user.id, {"source": "menu"})
+    # Simple placeholder. Later: integrate payment link or manager contact
+    await message.answer("Для оформления покупки, пожалуйста, напишите менеджеру: @manager")
+
+
 @router.callback_query(F.data.startswith("game_"))
 async def select_game(callback: CallbackQuery) -> None:
     game_id = callback.data.replace("game_", "")
@@ -135,6 +142,11 @@ async def select_game(callback: CallbackQuery) -> None:
         f"🎮 {game['name']}\n\nНажми кнопку ниже, чтобы начать игру.",
         reply_markup=play_game_keyboard(game_id, session_id),
     )
+    await track("game.opened", callback.from_user.id, {
+        "game_id": game_id,
+        "session_id": session_id,
+        "source": "menu",
+    })
     await callback.answer()
 
 
@@ -142,6 +154,13 @@ async def select_game(callback: CallbackQuery) -> None:
 async def handle_web_app_data(message: Message) -> None:
     try:
         data: GameResultPayload = json.loads(message.web_app_data.data)
+        # We track "game.finished" immediately after successful parse
+        await track("game.finished", message.from_user.id, {
+            "game_id": data.get("game_id", "unknown"),
+            "score": data.get("score"),
+            "duration_sec": data.get("duration_sec"),
+            "raw_payload": message.web_app_data.data,
+        })
     except Exception:
         await message.answer("Не удалось прочитать результат игры.")
         return

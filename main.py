@@ -39,6 +39,11 @@ async def main() -> None:
     tenant_cfg = get_tenant_config()
     app_state.init_tenant(tenant_cfg)
     app_state.set_integrations(resolve_integration_env(tenant_cfg))
+
+    # Initialize DB (creates tables if missing)
+    from models import init_db
+    await init_db()
+
     bot = Bot(token=settings.bot_token)
     dp = Dispatcher(storage=MemoryStorage())
 
