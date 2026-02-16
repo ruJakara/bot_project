@@ -16,3 +16,11 @@ integrations:
       email: "ALFACRM_EMAIL"
       api_key: "ALFACRM_API_KEY"
       branch_id: "ALFACRM_BRANCH"
+
+catalog:
+  enabled: true
+  items:
+    - id: "contact_manager"
+      title: "Написать менеджеру"
+      contact: "@manager"
+      cta_text: "Напишите менеджеру для оформления покупки"

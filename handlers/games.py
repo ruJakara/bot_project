@@ -20,6 +20,7 @@ from sqlalchemy import desc, select
 
 from config import get_settings
 from core.events import track
+from core.app_state import get_catalog_items
 from core.reminders import enable_reminder, process_due_reminders
 from models import AsyncSessionLocal, GameScore, User
 
@@ -57,6 +58,24 @@ def games_keyboard(games: List[Dict]) -> InlineKeyboardMarkup:
                     )
                 ]
             )
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+def catalog_keyboard(items: List[Dict]) -> InlineKeyboardMarkup:
+    buttons: List[List[InlineKeyboardButton]] = []
+    for item in items:
+        title = item.get("title")
+        item_id = item.get("id")
+        if not title or not item_id:
+            continue
+        buttons.append(
+            [
+                InlineKeyboardButton(
+                    text=title,
+                    callback_data=f"catalog_{item_id}",
+                )
+            ]
+        )
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
@@ -122,9 +141,61 @@ async def show_games_to_play(message: Message) -> None:
 
 @router.message(F.text == "🛒 Купить")
 async def cmd_buy(message: Message) -> None:
+    items = get_catalog_items()
+    if items:
+        await message.answer(
+            "Выберите, как оформить покупку:",
+            reply_markup=catalog_keyboard(items),
+        )
+        return
+
+    # Fallback to legacy behavior if catalog is not configured
     await track("purchase.intent", message.from_user.id, {"source": "menu"})
-    # Simple placeholder. Later: integrate payment link or manager contact
-    await message.answer("Для оформления покупки, пожалуйста, напишите менеджеру: @manager")
+    await message.answer(
+        "Для оформления покупки, пожалуйста, напишите менеджеру: @manager"
+    )
+
+
+@router.callback_query(F.data.startswith("catalog_"))
+async def handle_catalog_choice(callback: CallbackQuery) -> None:
+    item_id = callback.data.replace("catalog_", "", 1)
+    items = get_catalog_items()
+    item = next((i for i in items if i.get("id") == item_id), None)
+    if not item:
+        await callback.answer("Опция недоступна")
+        return
+
+    url = item.get("url")
+    contact = item.get("contact")
+
+    meta = {
+        "source": "menu",
+        "product_id": item.get("id"),
+    }
+    if url:
+        meta["url"] = url
+
+    await track("purchase.intent", callback.from_user.id, meta)
+
+    cta_text = item.get("cta_text") or "Оформление покупки"
+    if url:
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="Открыть ссылку",
+                        url=url,
+                    )
+                ]
+            ]
+        )
+        await callback.message.answer(cta_text, reply_markup=keyboard)
+    elif contact:
+        await callback.message.answer(f"{cta_text}\n\nКонтакт: {contact}")
+    else:
+        await callback.message.answer(cta_text)
+
+    await callback.answer()
 
 
 @router.message(F.text == "⏰ Напомнить")
@@ -142,9 +213,9 @@ async def cmd_remind(message: Message) -> None:
 async def cmd_send_due_reminders(message: Message) -> None:
     """Manual trigger to process due reminders."""
     import os
-    admin_id = int(os.getenv("ADMIN_TG_ID", 0))
-    if message.from_user.id != admin_id:
-        await message.answer("⛔ Недоступно")
+    admin_id = int(os.getenv("ADMIN_TG_ID", "0"))
+    if admin_id != 0 and message.from_user.id != admin_id:
+        await message.answer("Недоступно.")
         return
 
     count = await process_due_reminders()

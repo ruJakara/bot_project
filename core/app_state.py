@@ -57,3 +57,23 @@ def get_integrations() -> dict[str, dict[str, str]]:
     if _resolved_integrations is None:
         return {}
     return _resolved_integrations
+
+
+def get_catalog_items() -> list[dict]:
+    """Return tenant catalog items or an empty list.
+
+    If the tenant config has no ``catalog`` section or it is disabled,
+    this returns an empty list.
+    """
+    cfg = get_current_tenant()
+    catalog = cfg.get("catalog")
+    if not isinstance(catalog, dict):
+        return []
+    if not catalog.get("enabled"):
+        return []
+
+    items = catalog.get("items") or []
+    if not isinstance(items, list):
+        return []
+
+    return [item for item in items if isinstance(item, dict)]
