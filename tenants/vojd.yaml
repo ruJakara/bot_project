@@ -1,0 +1,18 @@
+tenant_id: vojd
+bot_id: hound_vojd
+
+brand:
+  name: "Vojd School"
+
+features:
+  games: true
+  catalog: false
+  reminders: false
+
+integrations:
+  alfacrm:
+    enabled: false
+    env:
+      email: "ALFACRM_EMAIL"
+      api_key: "ALFACRM_API_KEY"
+      branch_id: "ALFACRM_BRANCH"

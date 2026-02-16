@@ -10,6 +10,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 
 from config import get_settings
+from core.config import get_tenant_config, resolve_integration_env
+from core import app_state
 from handlers import games
 from handlers.leads import router as leads_router
 
@@ -34,6 +36,9 @@ async def start_web_server() -> web.AppRunner:
 
 async def main() -> None:
     settings = get_settings()
+    tenant_cfg = get_tenant_config()
+    app_state.init_tenant(tenant_cfg)
+    app_state.set_integrations(resolve_integration_env(tenant_cfg))
     bot = Bot(token=settings.bot_token)
     dp = Dispatcher(storage=MemoryStorage())
 
