@@ -1,3 +1,5 @@
+"""Analytics report from the bot database (events table)."""
+
 import json
 import logging
 import os
@@ -15,9 +17,24 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 
+def _get_db_path() -> str:
+    """Derive SQLite file path from DATABASE_URL (same source the bot uses).
+
+    Priority: DB_PATH (explicit override) → DATABASE_URL → bot.db
+    DATABASE_URL format: sqlite+aiosqlite:///./bot.db  →  ./bot.db
+    """
+    explicit = os.getenv("DB_PATH")
+    if explicit:
+        return explicit
+    db_url = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./bot.db")
+    if ":///" in db_url:
+        return db_url.split("///", 1)[1]
+    return "bot.db"
+
+
 def main():
     # 1. Config
-    DB_PATH = os.getenv("DB_PATH", "bot.db")
+    DB_PATH = _get_db_path()
     TENANT_ID = os.getenv("TENANT_ID")
     BOT_ID = os.getenv("BOT_ID")
     DAYS = int(os.getenv("DAYS", "7"))

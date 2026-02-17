@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import uuid
 from urllib.parse import quote
 from typing import Dict, List, TypedDict
@@ -201,8 +202,8 @@ async def handle_catalog_choice(callback: CallbackQuery) -> None:
 @router.message(F.text == "⏰ Напомнить")
 async def cmd_remind(message: Message) -> None:
     # Set reminder for 6 months (default)
+    # NOTE: track("reminder.enabled") is called inside enable_reminder()
     await enable_reminder(message.from_user.id, months=6)
-    await track("reminder.enabled", message.from_user.id, {"mode": "date", "months": 6, "source": "menu"})
     await message.answer(
         "⏰ Ок, я напомню вам через 6 месяцев.\n"
         "Мы пришлем уведомление, когда придет время."
@@ -212,7 +213,6 @@ async def cmd_remind(message: Message) -> None:
 @router.message(Command("send_due_reminders"))
 async def cmd_send_due_reminders(message: Message) -> None:
     """Manual trigger to process due reminders."""
-    import os
     admin_id = int(os.getenv("ADMIN_TG_ID", "0"))
     if admin_id != 0 and message.from_user.id != admin_id:
         await message.answer("Недоступно.")

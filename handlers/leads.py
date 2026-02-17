@@ -9,7 +9,7 @@ import crm
 from config import get_settings
 
 try:
-    from keyboards import main_keyboard  # type: ignore
+    from handlers.games import main_keyboard
 except Exception:
     def main_keyboard() -> ReplyKeyboardMarkup:
         return ReplyKeyboardMarkup(
