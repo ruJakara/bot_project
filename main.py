@@ -10,13 +10,15 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiohttp import web
 
 from config import get_settings
-from core.config import get_tenant_config, resolve_integration_env
-from core import app_state
-from handlers import games
-from handlers.leads import router as leads_router
+from models import init_db
+from handlers import games, leads
+from handlers.bill import router as bill_router
+from handlers.admin_contact import router as admin_contact_router
+from handlers.b2b import router as b2b_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 async def start_web_server() -> web.AppRunner:
     app = web.Application()
@@ -36,19 +38,19 @@ async def start_web_server() -> web.AppRunner:
 
 async def main() -> None:
     settings = get_settings()
-    tenant_cfg = get_tenant_config()
-    app_state.init_tenant(tenant_cfg)
-    app_state.set_integrations(resolve_integration_env(tenant_cfg))
 
     # Initialize DB (creates tables if missing)
-    from models import init_db
     await init_db()
 
     bot = Bot(token=settings.bot_token)
     dp = Dispatcher(storage=MemoryStorage())
 
+    # Register routers — order matters for FSM priority
     dp.include_router(games.router)
-    dp.include_router(leads_router)
+    dp.include_router(leads.router)
+    dp.include_router(bill_router)
+    dp.include_router(admin_contact_router)
+    dp.include_router(b2b_router)
 
     logger.info("Starting bot with polling")
     runner = await start_web_server()

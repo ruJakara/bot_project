@@ -1,64 +1,64 @@
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ALFA_BASE_URL = os.getenv("ALFA_BASE_URL", "https://<HOST>")
-ALFA_EMAIL = os.getenv("ALFA_EMAIL", "<EMAIL>")
-ALFA_API_KEY = os.getenv("ALFA_API_KEY", "<API_KEY>")
 
 @dataclass
 class Settings:
     bot_token: str
-    alfacrm_domain: str
-    alfacrm_token: str
+    admin_tg_id: int
+    admin_username: str
+    webapp_base_url: str
     database_url: str
-    render_url: str | None
+    render_url: str
     webhook_secret: str
-    default_client_phone: str | None
-    alfacrm_branch_id: int
-    allowed_cities: list[str]
-    domain: str
     game_paths: dict[str, str]
+    # AlfaCRM — optional
+    alfacrm_domain: Optional[str] = None
+    alfacrm_token: Optional[str] = None
+    alfacrm_branch_id: int = 1
+
 
 def get_settings() -> Settings:
     bot_token = os.getenv("BOT_TOKEN", "")
     if not bot_token:
         raise RuntimeError("BOT_TOKEN is not set")
 
-    alfacrm_domain = os.getenv("ALFACRM_DOMAIN", "")
-    alfacrm_token = os.getenv("ALFACRM_TOKEN", "")
-    if not alfacrm_domain or not alfacrm_token:
-        raise RuntimeError("ALFACRM_DOMAIN or ALFACRM_TOKEN is not set")
+    admin_tg_id_str = os.getenv("ADMIN_TG_ID", "0")
+    try:
+        admin_tg_id = int(admin_tg_id_str)
+    except ValueError:
+        admin_tg_id = 0
+
+    admin_username = os.getenv("ADMIN_USERNAME", "")
+
+    # Where games are hosted (GitHub Pages or Render)
+    webapp_base_url = os.getenv(
+        "WEBAPP_BASE_URL",
+        os.getenv("RENDER_URL", os.getenv("DOMAIN", "rujakara.github.io/bot_project")),
+    )
+    # Ensure no trailing slash
+    webapp_base_url = webapp_base_url.rstrip("/")
 
     database_url = os.getenv(
         "DATABASE_URL",
         "sqlite+aiosqlite:///./bot.db",
     )
 
-    domain = os.getenv("DOMAIN", "rujakara.github.io/bot_project")
-    
-    # Use RENDER_URL if set, otherwise fallback to DOMAIN. 
-    # If neither (local dev), use localhost.
-    render_url = os.getenv("RENDER_URL")
-    if not render_url:
-        render_url = domain
-
-    # Fallback to localhost if render_url is still empty/None (shouldn't happen with domain fallback)
-    if not render_url:
-        render_url = "localhost:10000"
+    render_url = webapp_base_url  # alias kept for game URL building
 
     webhook_secret = os.getenv("WEBHOOK_SECRET", "bot-webhook")
-    default_client_phone = os.getenv("ALFACRM_DEFAULT_PHONE")
-    
+
+    # AlfaCRM — optional
+    alfacrm_domain = os.getenv("ALFACRM_DOMAIN") or None
+    alfacrm_token = os.getenv("ALFACRM_TOKEN") or None
     try:
         alfacrm_branch_id = int(os.getenv("ALFACRM_BRANCH_ID", "1"))
     except ValueError:
         alfacrm_branch_id = 1
-
-    allowed_cities_str = os.getenv("ALLOWED_CITIES", "Екатеринбург,Среднеуральск")
-    allowed_cities = [city.strip() for city in allowed_cities_str.split(",") if city.strip()]
 
     # Default game paths mapping
     game_paths = {
@@ -76,14 +76,14 @@ def get_settings() -> Settings:
 
     return Settings(
         bot_token=bot_token,
-        alfacrm_domain=alfacrm_domain,
-        alfacrm_token=alfacrm_token,
+        admin_tg_id=admin_tg_id,
+        admin_username=admin_username,
+        webapp_base_url=webapp_base_url,
         database_url=database_url,
         render_url=render_url,
         webhook_secret=webhook_secret,
-        default_client_phone=default_client_phone,
+        game_paths=game_paths,
+        alfacrm_domain=alfacrm_domain,
+        alfacrm_token=alfacrm_token,
         alfacrm_branch_id=alfacrm_branch_id,
-        allowed_cities=allowed_cities,
-        domain=domain,
-        game_paths=game_paths
     )
