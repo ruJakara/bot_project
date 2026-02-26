@@ -1,0 +1,15 @@
+[Unit]
+Description=LazArt Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/bots/bot_project
+Environment="PATH=/opt/bots/bot_project/venv/bin"
+ExecStart=/opt/bots/bot_project/venv/bin/python /opt/bots/bot_project/main.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
