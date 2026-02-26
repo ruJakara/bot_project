@@ -1,0 +1,57 @@
+[
+  {
+    "action": "download",
+    "connectionId": "89.191.225.207:22:root",
+    "hostName": "Lazart.com",
+    "username": "root",
+    "remotePath": "/root/.bash_history",
+    "localPath": "c:\\Users\\rujak\\AppData\\Local\\Temp\\ssh-lite\\0c834a34\\[root@89.191.225.207] .bash_history",
+    "fileSize": 1120,
+    "success": true,
+    "timestamp": "2026-02-26T06:36:23.306Z"
+  },
+  {
+    "action": "download",
+    "connectionId": "89.191.225.207:22:root",
+    "hostName": "Lazart.com",
+    "username": "root",
+    "remotePath": "/root/.bashrc",
+    "localPath": "c:\\Users\\rujak\\AppData\\Local\\Temp\\ssh-lite\\0c834a34\\[root@89.191.225.207] .bashrc",
+    "fileSize": 3106,
+    "success": true,
+    "timestamp": "2026-02-26T06:37:01.810Z"
+  },
+  {
+    "action": "download",
+    "connectionId": "89.191.225.207:22:root",
+    "hostName": "Lazart.com",
+    "username": "root",
+    "remotePath": "/root/.lesshst",
+    "localPath": "c:\\Users\\rujak\\AppData\\Local\\Temp\\ssh-lite\\0c834a34\\[root@89.191.225.207] .lesshst",
+    "fileSize": 20,
+    "success": true,
+    "timestamp": "2026-02-26T06:37:13.930Z"
+  },
+  {
+    "action": "download",
+    "connectionId": "89.191.225.207:22:root",
+    "hostName": "Lazart.com",
+    "username": "root",
+    "remotePath": "/root/.lesshsQ",
+    "localPath": "c:\\Users\\rujak\\AppData\\Local\\Temp\\ssh-lite\\0c834a34\\[root@89.191.225.207] .lesshsQ",
+    "fileSize": 0,
+    "success": true,
+    "timestamp": "2026-02-26T06:37:14.665Z"
+  },
+  {
+    "action": "download",
+    "connectionId": "89.191.225.207:22:root",
+    "hostName": "Lazart.com",
+    "username": "root",
+    "remotePath": "/root/.profile",
+    "localPath": "c:\\Users\\rujak\\AppData\\Local\\Temp\\ssh-lite\\0c834a34\\[root@89.191.225.207] .profile",
+    "fileSize": 161,
+    "success": true,
+    "timestamp": "2026-02-26T06:37:16.221Z"
+  }
+]
