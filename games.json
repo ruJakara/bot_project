@@ -58,5 +58,71 @@
     "name": "Хакер Неон",
     "description": "Игра из папки teGame/ХАКЕР НЕОН",
     "enabled": true
+  },
+  {
+    "id": "alhimic",
+    "name": "Алхимик",
+    "description": "Игра Алхимик — смешивай элементы",
+    "enabled": true
+  },
+  {
+    "id": "artemTG",
+    "name": "Игра Артема",
+    "description": "Игра ученика Артема",
+    "enabled": true
+  },
+  {
+    "id": "block_blast",
+    "name": "Block Blast",
+    "description": "Головоломка Block Blast",
+    "enabled": true
+  },
+  {
+    "id": "naydi_pary",
+    "name": "Найди пару",
+    "description": "Игра на поиск пар",
+    "enabled": true
+  },
+  {
+    "id": "piano_master",
+    "name": "Пианино",
+    "description": "Музыкальная игра Пианино",
+    "enabled": true
+  },
+  {
+    "id": "qwerty",
+    "name": "Qwerty",
+    "description": "Игра Qwerty",
+    "enabled": true
+  },
+  {
+    "id": "shadow_slayer",
+    "name": "Shadow Slayer",
+    "description": "Битва с тенями",
+    "enabled": true
+  },
+  {
+    "id": "syzet",
+    "name": "Syzet",
+    "description": "Игра Syzet",
+    "enabled": true
+  },
+  {
+    "id": "igra_chisla",
+    "name": "Игра в числа",
+    "description": "Математическая игра из teGame",
+    "enabled": true
+  },
+  {
+    "id": "vegas_casino",
+    "name": "Vegas Casino",
+    "description": "Казино игры",
+    "enabled": true
+  },
+  {
+    "id": "vitalik",
+    "name": "Виталик",
+    "description": "Игра Виталика",
+    "enabled": true
   }
 ]

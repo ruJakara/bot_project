@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vegas Casino • Настоящая рулетка</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="container">
+        <h1 class="neon-title">🎰 VEGAS CASINO 🎰</h1>
+        
+        <div class="balance-card">
+            <span class="balance-label">БАЛАНС</span>
+            <span class="balance-amount" id="balance">5000</span>
+            <span class="currency">💰</span>
+        </div>
+
+        <div class="game-selector">
+            <button class="game-btn active" data-game="roulette">🎡 РУЛЕТКА</button>
+            <button class="game-btn" data-game="dice">🎲 КОСТИ</button>
+            <button class="game-btn" data-game="coin">🪙 МОНЕТА</button>
+        </div>
+
+        <!-- Игра 1: Рулетка как в казино -->
+        <div id="roulette-game" class="game-panel active">
+            <h2 class="game-title">🎡 ЕВРОПЕЙСКАЯ РУЛЕТКА</h2>
+            
+            <div class="roulette-real-container">
+                <div class="roulette-wheel-real" id="roulette-wheel-real">
+                    <!-- Центр колеса -->
+                    <div class="wheel-center"></div>
+                    
+                    <!-- Номера по порядку как в настоящем казино -->
+                    <div class="number zero" style="transform: rotate(0deg) translateX(120px) rotate(0deg);">0</div>
+                    <div class="number red" style="transform: rotate(9.73deg) translateX(120px) rotate(-9.73deg);">32</div>
+                    <div class="number black" style="transform: rotate(19.46deg) translateX(120px) rotate(-19.46deg);">15</div>
+                    <div class="number red" style="transform: rotate(29.19deg) translateX(120px) rotate(-29.19deg);">19</div>
+                    <div class="number black" style="transform: rotate(38.92deg) translateX(120px) rotate(-38.92deg);">4</div>
+                    <div class="number red" style="transform: rotate(48.65deg) translateX(120px) rotate(-48.65deg);">21</div>
+                    <div class="number black" style="transform: rotate(58.38deg) translateX(120px) rotate(-58.38deg);">2</div>
+                    <div class="number red" style="transform: rotate(68.11deg) translateX(120px) rotate(-68.11deg);">25</div>
+                    <div class="number black" style="transform: rotate(77.84deg) translateX(120px) rotate(-77.84deg);">17</div>
+                    <div class="number red" style="transform: rotate(87.57deg) translateX(120px) rotate(-87.57deg);">34</div>
+                    <div class="number black" style="transform: rotate(97.3deg) translateX(120px) rotate(-97.3deg);">6</div>
+                    <div class="number red" style="transform: rotate(107.03deg) translateX(120px) rotate(-107.03deg);">27</div>
+                    <div class="number black" style="transform: rotate(116.76deg) translateX(120px) rotate(-116.76deg);">13</div>
+                    <div class="number red" style="transform: rotate(126.49deg) translateX(120px) rotate(-126.49deg);">36</div>
+                    <div class="number black" style="transform: rotate(136.22deg) translateX(120px) rotate(-136.22deg);">11</div>
+                    <div class="number red" style="transform: rotate(145.95deg) translateX(120px) rotate(-145.95deg);">30</div>
+                    <div class="number black" style="transform: rotate(155.68deg) translateX(120px) rotate(-155.68deg);">8</div>
+                    <div class="number red" style="transform: rotate(165.41deg) translateX(120px) rotate(-165.41deg);">23</div>
+                    <div class="number black" style="transform: rotate(175.14deg) translateX(120px) rotate(-175.14deg);">10</div>
+                    <div class="number red" style="transform: rotate(184.87deg) translateX(120px) rotate(-184.87deg);">5</div>
+                    <div class="number black" style="transform: rotate(194.6deg) translateX(120px) rotate(-194.6deg);">24</div>
+                    <div class="number red" style="transform: rotate(204.33deg) translateX(120px) rotate(-204.33deg);">16</div>
+                    <div class="number black" style="transform: rotate(214.06deg) translateX(120px) rotate(-214.06deg);">33</div>
+                    <div class="number red" style="transform: rotate(223.79deg) translateX(120px) rotate(-223.79deg);">1</div>
+                    <div class="number black" style="transform: rotate(233.52deg) translateX(120px) rotate(-233.52deg);">20</div>
+                    <div class="number red" style="transform: rotate(243.25deg) translateX(120px) rotate(-243.25deg);">14</div>
+                    <div class="number black" style="transform: rotate(252.98deg) translateX(120px) rotate(-252.98deg);">31</div>
+                    <div class="number red" style="transform: rotate(262.71deg) translateX(120px) rotate(-262.71deg);">9</div>
+                    <div class="number black" style="transform: rotate(272.44deg) translateX(120px) rotate(-272.44deg);">22</div>
+                    <div class="number red" style="transform: rotate(282.17deg) translateX(120px) rotate(-282.17deg);">18</div>
+                    <div class="number black" style="transform: rotate(291.9deg) translateX(120px) rotate(-291.9deg);">29</div>
+                    <div class="number red" style="transform: rotate(301.63deg) translateX(120px) rotate(-301.63deg);">7</div>
+                    <div class="number black" style="transform: rotate(311.36deg) translateX(120px) rotate(-311.36deg);">28</div>
+                    <div class="number red" style="transform: rotate(321.09deg) translateX(120px) rotate(-321.09deg);">12</div>
+                    <div class="number black" style="transform: rotate(330.82deg) translateX(120px) rotate(-330.82deg);">35</div>
+                    <div class="number red" style="transform: rotate(340.55deg) translateX(120px) rotate(-340.55deg);">3</div>
+                    <div class="number black" style="transform: rotate(350.28deg) translateX(120px) rotate(-350.28deg);">26</div>
+                    
+                    <!-- Шарик рулетки -->
+                    <div class="ball" id="roulette-ball"></div>
+                </div>
+                <div class="wheel-pointer-real">▼</div>
+            </div>
+
+            <div class="bet-area">
+                <input type="number" id="bet-amount-roulette" class="bet-input" placeholder="Ставка" min="1" value="100">
+                <div class="bet-buttons">
+                    <button class="action-btn red" data-bet="red">🔴 КРАСНОЕ</button>
+                    <button class="action-btn black" data-bet="black">⚫ ЧЕРНОЕ</button>
+                </div>
+            </div>
+            <div id="roulette-result" class="result-display">⚡ СДЕЛАЙ СТАВКУ ⚡</div>
+        </div>
+
+        <!-- Игра 2: Кости -->
+        <div id="dice-game" class="game-panel">
+            <h2 class="game-title">🎲 БРОСОК КОСТЕЙ</h2>
+            
+            <div class="dice-container">
+                <div class="dice" id="dice-1">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <div class="dice" id="dice-2">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <div class="bet-area">
+                <input type="number" id="bet-amount-dice" class="bet-input" placeholder="Ставка" min="1" value="100">
+                <div class="number-picker">
+                    <span class="pick-label">Твоё число:</span>
+                    <input type="number" id="dice-guess" min="1" max="6" value="3" class="dice-input">
+                </div>
+                <button class="action-btn dice-roll" id="roll-dice">🎲 БРОСИТЬ КОСТИ</button>
+            </div>
+            <div id="dice-result" class="result-display">⚡ ВЫБЕРИ ЧИСЛО ⚡</div>
+        </div>
+
+        <!-- Игра 3: Монетка -->
+        <div id="coin-game" class="game-panel">
+            <h2 class="game-title">🪙 ОРЕЛ / РЕШКА</h2>
+            
+            <div class="coin-container">
+                <div class="coin" id="coin">
+                    <div class="coin-front">🦅</div>
+                    <div class="coin-back">💀</div>
+                </div>
+            </div>
+
+            <div class="bet-area">
+                <input type="number" id="bet-amount-coin" class="bet-input" placeholder="Ставка" min="1" value="100">
+                <div class="bet-buttons">
+                    <button class="action-btn coin" data-coin="heads">🦅 ОРЕЛ</button>
+                    <button class="action-btn coin" data-coin="tails">💀 РЕШКА</button>
+                </div>
+            </div>
+            <div id="coin-result" class="result-display">⚡ ВЫБЕРИ СТОРОНУ ⚡</div>
+        </div>
+
+        <button class="reset-btn" id="reset-game">🔄 НАЧАТЬ ЗАНОВО</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

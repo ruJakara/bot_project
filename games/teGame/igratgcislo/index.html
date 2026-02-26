@@ -1,0 +1,47 @@
+<!-- project/
+├── index.html
+├── style.css
+├── game.js
+├── api.js
+├── config.js
+├── assets/
+│   └── star.png
+├── sound/
+│   └── click.mp3
+└── ing/ (пустая папка, если нужно) -->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поймай Звезду</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Меню -->
+    <div id="menu-screen" class="screen active">
+        <h1>ПОЙМАЙ ЗВЕЗДУ</h1>
+        <p>Разработчик: Тимур, 14 лет</p>
+        <button id="start-btn">Начать игру</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="game-screen" class="screen">
+        <div id="timer">Время: 60</div>
+        <div id="score">Очки: 0</div>
+        <div id="star" class="star"></div>
+    </div>
+
+    <!-- Экран результата -->
+    <div id="result-screen" class="screen">
+        <h2>Игра окончена!</h2>
+        <p id="final-score">Ваш результат: 0</p>
+        <p id="record-info">Рекорд: 0</p>
+        <button id="restart-btn">Играть снова</button>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

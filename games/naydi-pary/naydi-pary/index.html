@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Затерянный Храм: Восхождение</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-wrapper">
+        <!-- Главное меню -->
+        <div class="menu-screen" id="menu-screen">
+            <div class="menu-container">
+                <h1 class="game-title">Затерянный <span>Храм</span></h1>
+                <h2 class="menu-subtitle">Восхождение к истине</h2>
+                
+                <div class="level-selector">
+                    <h3>Выбери уровень</h3>
+                    <div class="level-grid" id="level-grid">
+                        <!-- Уровни будут сгенерированы из config.js -->
+                    </div>
+                </div>
+                
+                <div class="menu-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Пройдено</span>
+                        <span class="stat-value" id="completed-levels">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Всего</span>
+                        <span class="stat-value">15</span>
+                    </div>
+                </div>
+                
+                <button class="reset-progress-btn" id="reset-progress">⟲ Забыть всё</button>
+            </div>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div class="game-screen hidden" id="game-screen">
+            <div class="game-container">
+                <div class="game-header">
+                    <button class="back-to-menu" id="back-to-menu">← Храм</button>
+                    <h2 class="level-indicator" id="level-indicator">Уровень 1</h2>
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <span class="stat-label">Ходы</span>
+                            <span class="stat-value" id="moves-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Найдено</span>
+                            <span class="stat-value" id="pairs-count">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="board-container">
+                    <div class="board" id="game-board"></div>
+                </div>
+                
+                <div class="game-footer">
+                    <button class="new-game-btn" id="restart-level">↺ Перерождение</button>
+                    <button class="next-level-btn hidden" id="next-level">Следующий уровень →</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Эффекты перехода -->
+        <div class="transition-overlay" id="transition-overlay"></div>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

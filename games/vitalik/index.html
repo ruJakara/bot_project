@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 игр в одной</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-default">
+    <div class="container" id="mainContainer">
+        <h1 class="glitch-title">🎮 ИГРОВОЙ СБОРНИК 🎮</h1>
+        
+        <div class="main-menu" id="mainMenu">
+            <div class="menu-header">
+                <h2>Выбери игру:</h2>
+                <button class="settings-btn" id="settingsBtn">⚙️ Настройки</button>
+            </div>
+            <div class="games-grid">
+                <div class="game-card" data-game="tetris">
+                    <div class="game-icon">🧩</div>
+                    <h3>Тетрис</h3>
+                    <p>Классическая головоломка</p>
+                </div>
+                <div class="game-card" data-game="minesweeper">
+                    <div class="game-icon">💣</div>
+                    <h3>Сапер</h3>
+                    <p>Найди все мины</p>
+                </div>
+                <div class="game-card" data-game="hangman">
+                    <div class="game-icon">🪢</div>
+                    <h3>Виселица</h3>
+                    <p>Угадай слово</p>
+                </div>
+                <div class="game-card" data-game="snake">
+                    <div class="game-icon">🐍</div>
+                    <h3>Змейка</h3>
+                    <p>Съешь как можно больше</p>
+                </div>
+                <div class="game-card" data-game="racing">
+                    <div class="game-icon">🏎️</div>
+                    <h3>Гоночки</h3>
+                    <p>Обгоняй соперников</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-panel" id="settingsPanel" style="display: none;">
+            <h2>⚙️ Настройки</h2>
+            <div class="settings-content">
+                <div class="setting-item">
+                    <span>🔊 Звуки:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>🎵 Музыка:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="musicToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>🎼 Выбрать мелодию:</span>
+                    <select id="musicSelect" class="music-select">
+                        <option value="piano">🎹 Расслабляющее пианино</option>
+                        <option value="lofi">☕ Lo-Fi часы</option>
+                        <option value="ambient">🌌 Космический эмбиент</option>
+                        <option value="guitar">🎸 Акустическая гитара</option>
+                        <option value="synthwave">🌆 Синтвейв</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span>🎨 Фон:</span>
+                    <div class="theme-selector">
+                        <div class="theme-option" data-theme="default" style="background: linear-gradient(135deg, #667eea, #764ba2);">🌈</div>
+                        <div class="theme-option" data-theme="dark" style="background: linear-gradient(135deg, #2c3e50, #1a1a1a);">🌑</div>
+                        <div class="theme-option" data-theme="ocean" style="background: linear-gradient(135deg, #00b4db, #0083b0);">🌊</div>
+                        <div class="theme-option" data-theme="sunset" style="background: linear-gradient(135deg, #ff6b6b, #ffb88c);">🌅</div>
+                        <div class="theme-option" data-theme="forest" style="background: linear-gradient(135deg, #134e5e, #71b280);">🌲</div>
+                        <div class="theme-option" data-theme="space" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">🚀</div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span>💫 Анимации:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="animationsToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span>📊 Сложность:</span>
+                    <div class="difficulty-selector">
+                        <button class="difficulty-btn" data-difficulty="easy">😊 Легкая</button>
+                        <button class="difficulty-btn active" data-difficulty="normal">😐 Средняя</button>
+                        <button class="difficulty-btn" data-difficulty="hard">😈 Сложная</button>
+                    </div>
+                </div>
+            </div>
+            <button class="close-settings" id="closeSettings">Закрыть</button>
+        </div>
+
+        <div class="game-container" id="gameContainer" style="display: none;">
+            <div class="game-header">
+                <button class="back-btn" id="backToMenu">← Назад</button>
+                <h2 id="gameTitle"></h2>
+                <div class="score" id="scoreDisplay">Счет: 0</div>
+            </div>
+            <div class="game-area" id="gameArea"></div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -72,6 +72,18 @@ def get_settings() -> Settings:
         "sapep": "teGame/sapep/index.html",
         "tonya_tg": "teGame/tonyaTG/index.html",
         "hacker_neon": "teGame/ХАКЕР НЕОН/ХАКЕР НЕОН/index.html",
+        # New games from games/ folder
+        "alhimic": "games/alhimic/alhimic/index.html",
+        "artemTG": "games/artemTG/index.html",
+        "block_blast": "games/block-blast/block-blast/index.html",
+        "naydi_pary": "games/naydi-pary/naydi-pary/index.html",
+        "piano_master": "games/piano-master/piano-master/index.html",
+        "qwerty": "games/qwerty telegram/qwerty telegram/index.html",
+        "shadow_slayer": "games/shadow-slayer/shadow-slayer/index.html",
+        "syzet": "games/syzet/syzet/index.html",
+        "igra_chisla": "games/teGame/igratgcislo/index.html",
+        "vegas_casino": "games/vegas-casino/vegas-casino/index.html",
+        "vitalik": "games/vitalik/index.html",
     }
 
     return Settings(

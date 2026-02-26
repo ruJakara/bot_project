@@ -26,6 +26,8 @@ async def start_web_server() -> web.AppRunner:
     app.router.add_get("/health", lambda request: web.Response(text="OK"))
     if Path("teGame").is_dir():
         app.router.add_static("/teGame/", path="teGame", show_index=True)
+    if Path("games").is_dir():
+        app.router.add_static("/games/", path="games", show_index=True)
 
     runner = web.AppRunner(app)
     await runner.setup()

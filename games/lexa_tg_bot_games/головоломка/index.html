@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переливайка Zone</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Стартовый экран -->
+        <div id="start-screen" class="screen active">
+            <h1>🌌 Переливайка Zone</h1>
+            <p>Соедини цвета за 60 сек!</p>
+            <button id="start-btn" class="btn-primary">ИГРАТЬ</button>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="time">60</div>
+                <div class="moves">0</div>
+                <div class="progress">0/6</div>
+            </div>
+            <canvas id="game-canvas" width="400" height="550"></canvas>
+            <div class="game-controls">
+                <button id="undo-btn" class="btn-control">↶</button>
+                <button id="restart-btn" class="btn-control">🔄</button>
+            </div>
+        </div>
+
+        <!-- Экран результата -->
+        <div id="result-screen" class="screen">
+            <h2 id="result-title">Игра окончена</h2>
+            <div id="result-score" class="score-big">0</div>
+            <p id="result-text">Неплохо!</p>
+            <div class="result-stats">
+                <div>Ходов: <span id="result-moves">0</span></div>
+                <div>Время: <span id="result-time">60</span>с</div>
+            </div>
+            <div class="result-buttons">
+                <button id="play-again-btn" class="btn-primary">ИГРАТЬ ЕЩЁ</button>
+                <button id="show-leaderboard-btn" class="btn-secondary">🏆 ЛИДЕРЫ</button>
+            </div>
+        </div>
+
+        <!-- ТАБЛИЦА ЛИДЕРОВ -->
+        <div id="leaderboard-screen" class="screen">
+            <h2>🏆 ТОП РЕЗУЛЬТАТЫ</h2>
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <span>МЕСТО</span>
+                    <span>ОЧКИ</span>
+                    <span>ХОДЫ</span>
+                    <span>ВРЕМЯ</span>
+                </div>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Результаты загружаются динамически -->
+                </div>
+                <div class="your-best">
+                    <strong>Ваш лучший: <span id="your-best-score">0</span></strong>
+                </div>
+            </div>
+            <button id="back-to-menu-btn" class="btn-primary">← МЕНЮ</button>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

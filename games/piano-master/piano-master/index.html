@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Tiles | Новые треки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .game-container {
+            background: #0a0c14;
+            border-radius: 2.5rem;
+            padding: 1.8rem;
+            box-shadow: 0 20px 30px rgba(0,0,0,0.8), inset 0 0 0 1px #2f3650;
+        }
+
+        .canvas-wrapper {
+            background: #030407;
+            border-radius: 2rem;
+            padding: 1rem;
+        }
+
+        canvas {
+            display: block;
+            width: 450px;
+            height: 700px;
+            background: #0f121c;
+            border-radius: 1.8rem;
+            box-shadow: 0 0 0 2px #323b5c;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        .lanes-legend {
+            display: flex;
+            justify-content: space-between;
+            width: 450px;
+            margin: 1rem auto 0.5rem;
+            gap: 0.4rem;
+        }
+
+        .lane-badge {
+            flex: 1;
+            background: #1a1f32;
+            color: #d2dcff;
+            text-align: center;
+            padding: 0.8rem 0;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+            border: 1px solid #48537d;
+            box-shadow: 0 5px 0 #0c0f1b;
+            transition: 0.05s linear;
+            cursor: pointer;
+        }
+
+        .lane-badge.active {
+            background: #ffd966;
+            color: #0b0d15;
+            border-color: white;
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #0c0f1b;
+        }
+
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            width: 450px;
+            margin: 0.8rem auto 1rem;
+            color: #b6c2ff;
+            font-weight: 600;
+        }
+
+        .stat-item {
+            background: #121724;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #3a4470;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 1rem 0 1rem;
+        }
+
+        .btn {
+            background: #1f253f;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #f0f4ff;
+            box-shadow: 0 6px 0 #0b0f1c, 0 4px 12px black;
+            cursor: pointer;
+            transition: 0.07s;
+            border: 1px solid #4a5482;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0b0f1c;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            background: #121724;
+            padding: 0.4rem 1rem;
+            border-radius: 3rem;
+            gap: 0.4rem;
+        }
+
+        .file-btn {
+            background: #311f4a;
+            border-color: #7d5fb0;
+        }
+
+        .status {
+            background: #00000070;
+            backdrop-filter: blur(4px);
+            padding: 0.7rem 2rem;
+            border-radius: 3rem;
+            color: #cad2ff;
+            border: 1px solid #4a5585;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .bpm-display {
+            background: #121724;
+            padding: 0.3rem 1.2rem;
+            border-radius: 3rem;
+            color: #b6c2ff;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.2rem;
+            color: #49537c;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="450" height="700"></canvas>
+        </div>
+
+        <div class="lanes-legend">
+            <div class="lane-badge" id="lane-1">1</div>
+            <div class="lane-badge" id="lane-2">2</div>
+            <div class="lane-badge" id="lane-3">3</div>
+            <div class="lane-badge" id="lane-4">4</div>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-item" id="missedCount">❌ Пропущено: 0</div>
+            <div class="stat-item" id="falseCount">⚠️ Ложных: 0</div>
+            <div class="stat-item" id="accuracyStat">🎯 Точность: 100%</div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="playPauseBtn">⏸️ Пауза</button>
+            <button class="btn file-btn" id="loadMusicBtn">📁 Загрузить свою музыку</button>
+            <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+
+            <div class="btn-group">
+                <button class="btn track-btn" data-track="0">🎸 Rock Guitar</button>
+                <button class="btn track-btn" data-track="1">🎹 Piano Melody</button>
+                <button class="btn track-btn" data-track="2">🥁 Electronic Beat</button>
+                <button class="btn track-btn" data-track="3">🎻 Orchestral</button>
+                <button class="btn track-btn" data-track="4">🎵 Jazz Vibes</button>
+            </div>
+        </div>
+
+        <div class="status" id="nowPlaying">
+            ⚡ Сейчас: Rock Guitar • BPM: <span id="bpmDisplay">144</span> • Кликай мышкой или 1-4
+        </div>
+        <footer>НОВЫЕ ТРЕКИ • Загрузи свою музыку • Счётчик ошибок</footer>
+    </div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const laneCount = 4;
+            const laneWidth = canvas.width / laneCount;
+
+            const hitZoneY = canvas.height - 100;
+            const hitZoneHeight = 80;
+
+            let notes = [];
+
+            let laneActive = [false, false, false, false];
+            const laneElements = [
+                document.getElementById('lane-1'),
+                document.getElementById('lane-2'),
+                document.getElementById('lane-3'),
+                document.getElementById('lane-4')
+            ];
+
+            let missedNotes = 0;
+            let falseHits = 0;
+            let hitNotes = 0;
+            let totalNotes = 0;
+            const missedCountEl = document.getElementById('missedCount');
+            const falseCountEl = document.getElementById('falseCount');
+            const accuracyStatEl = document.getElementById('accuracyStat');
+
+            let audioCtx = null;
+            let isPlaying = false;
+            let sourceNode = null;
+            let gainNode = null;
+            let trackStartTime = 0;
+            let trackPausedAt = 0;
+            let currentTrackIndex = 0;
+            let isUserFile = false;
+            let currentDuration = 64;
+            
+            let bpm = 144;
+            const bpmDisplay = document.getElementById('bpmDisplay');
+            
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const loadMusicBtn = document.getElementById('loadMusicBtn');
+            const audioFile = document.getElementById('audioFile');
+            const nowPlaying = document.getElementById('nowPlaying');
+
+            // Точный детектор BPM
+            function detectBPM(audioBuffer) {
+                const channelData = audioBuffer.getChannelData(0);
+                const sampleRate = audioBuffer.sampleRate;
+                
+                const maxSeconds = Math.min(30, audioBuffer.duration);
+                const maxSamples = Math.floor(sampleRate * maxSeconds);
+                const data = channelData.slice(0, maxSamples);
+                
+                const decimationFactor = 4;
+                const decimatedLength = Math.floor(data.length / decimationFactor);
+                const decimated = new Float32Array(decimatedLength);
+                
+                for (let i = 0; i < decimatedLength; i++) {
+                    decimated[i] = data[i * decimationFactor];
+                }
+                
+                const windowSize = Math.floor(0.05 * sampleRate / decimationFactor);
+                const energy = [];
+                
+                for (let i = windowSize; i < decimatedLength - windowSize; i += windowSize/2) {
+                    let sum = 0;
+                    for (let j = 0; j < windowSize; j++) {
+                        sum += Math.abs(decimated[i + j]);
+                    }
+                    energy.push(sum / windowSize);
+                }
+                
+                const maxEnergy = Math.max(...energy);
+                const normalizedEnergy = energy.map(e => e / maxEnergy);
+                
+                const minBPM = 70;
+                const maxBPM = 180;
+                
+                const minLag = Math.floor(60 / maxBPM * sampleRate / decimationFactor / (windowSize/2));
+                const maxLag = Math.floor(60 / minBPM * sampleRate / decimationFactor / (windowSize/2));
+                
+                let bestLag = 0;
+                let bestCorrelation = 0;
+                
+                for (let lag = minLag; lag <= maxLag; lag++) {
+                    let correlation = 0;
+                    let count = 0;
+                    
+                    for (let i = 0; i < normalizedEnergy.length - lag; i++) {
+                        correlation += normalizedEnergy[i] * normalizedEnergy[i + lag];
+                        count++;
+                    }
+                    
+                    if (count > 0) {
+                        correlation /= count;
+                        
+                        if (correlation > bestCorrelation) {
+                            bestCorrelation = correlation;
+                            bestLag = lag;
+                        }
+                    }
+                }
+                
+                if (bestLag === 0) return 120;
+                
+                const secondsPerWindow = windowSize/2 * decimationFactor / sampleRate;
+                const detectedBPM = Math.round(60 / (bestLag * secondsPerWindow));
+                
+                return Math.min(180, Math.max(70, detectedBPM));
+            }
+
+            // НОВЫЕ ТРЕКИ (5 разных стилей)
+            const builtinTracks = [
+                { 
+                    name: '🎸 Rock Guitar', 
+                    bpm: 144, 
+                    duration: 68,
+                    style: 'rock'
+                },
+                { 
+                    name: '🎹 Piano Melody', 
+                    bpm: 120, 
+                    duration: 72,
+                    style: 'piano'
+                },
+                { 
+                    name: '🥁 Electronic Beat', 
+                    bpm: 128, 
+                    duration: 70,
+                    style: 'electronic'
+                },
+                { 
+                    name: '🎻 Orchestral', 
+                    bpm: 110, 
+                    duration: 74,
+                    style: 'orchestral'
+                },
+                { 
+                    name: '🎵 Jazz Vibes', 
+                    bpm: 95, 
+                    duration: 76,
+                    style: 'jazz'
+                }
+            ];
+
+            // Генератор треков по стилям
+            function generateTrack(ctx, style, bpm, durationSec) {
+                const sampleRate = 44100;
+                const length = Math.floor(sampleRate * durationSec);
+                const buffer = ctx.createBuffer(2, length, sampleRate);
+                const left = buffer.getChannelData(0);
+                const right = buffer.getChannelData(1);
+
+                const beatInterval = 60 / bpm;
+
+                for (let i = 0; i < length; i++) {
+                    const t = i / sampleRate;
+                    let sample = 0;
+
+                    const beatPhase = (t % beatInterval) / beatInterval;
+                    const beatNum = Math.floor(t / beatInterval) % 16;
+
+                    // Бочка на каждый бит (для ритма)
+                    if (beatPhase < 0.06 && style !== 'piano' && style !== 'jazz') {
+                        sample += Math.sin(2 * Math.PI * 70 * t) * Math.exp(-t * 35) * 0.5;
+                    }
+
+                    // Стилизация
+                    switch(style) {
+                        case 'rock':
+                            // Рок-гитара
+                            for (let h = 0; h < 3; h++) {
+                                sample += Math.sin(2 * Math.PI * (110 + h * 1.5) * t) * 0.2;
+                            }
+                            // Ударные
+                            if ((beatNum % 4 === 1 || beatNum % 4 === 3) && beatPhase > 0.45 && beatPhase < 0.55) {
+                                sample += Math.random() * 0.6 - 0.3;
+                            }
+                            break;
+                            
+                        case 'piano':
+                            // Фортепиано (арпеджио)
+                            let pianoNotes = [261.63, 329.63, 392.00, 523.25];
+                            let pianoIndex = Math.floor(t * 6) % 4;
+                            sample += Math.sin(2 * Math.PI * pianoNotes[pianoIndex] * t) * 0.3;
+                            
+                            // Басы
+                            if (beatNum % 8 === 0) {
+                                sample += Math.sin(2 * Math.PI * 65.5 * t) * 0.2;
+                            }
+                            break;
+                            
+                        case 'electronic':
+                            // Электронный грув
+                            sample += Math.sin(2 * Math.PI * 110 * t) * 0.25;
+                            if (beatNum % 4 === 0) {
+                                sample += Math.sin(2 * Math.PI * 440 * t) * 0.2;
+                            }
+                            if (beatNum % 8 === 3) {
+                                sample += Math.sin(2 * Math.PI * 880 * t) * 0.15;
+                            }
+                            break;
+                            
+                        case 'orchestral':
+                            // Оркестр
+                            sample += Math.sin(2 * Math.PI * 440 * t) * 0.15;
+                            sample += Math.sin(2 * Math.PI * 554.37 * t) * 0.15;
+                            sample += Math.sin(2 * Math.PI * 659.25 * t) * 0.15;
+                            
+                            // Литавры
+                            if (beatNum % 8 === 0 && beatPhase < 0.1) {
+                                sample += Math.sin(2 * Math.PI * 55 * t) * 0.3;
+                            }
+                            break;
+                            
+                        case 'jazz':
+                            // Джаз
+                            let jazzNotes = [440, 523.25, 659.25, 783.99];
+                            let jazzIndex = Math.floor(t * 5) % 4;
+                            sample += Math.sin(2 * Math.PI * jazzNotes[jazzIndex] * t) * 0.2;
+                            
+                            // Контрабас
+                            sample += Math.sin(2 * Math.PI * 55 * t) * 0.2;
+                            
+                            // Тарелки
+                            if (beatPhase > 0.9) {
+                                sample += Math.random() * 0.2 - 0.1;
+                            }
+                            break;
+                    }
+
+                    if (i < 2000) sample *= i / 2000;
+                    if (i > length - 4000) sample *= (length - i) / 4000;
+
+                    left[i] = Math.max(-0.8, Math.min(0.8, sample * 0.5));
+                    right[i] = left[i];
+                }
+                return buffer;
+            }
+
+            // Генерируем буферы
+            for (let i = 0; i < builtinTracks.length; i++) {
+                const t = builtinTracks[i];
+                t.buffer = null;
+            }
+
+            function resetStats() {
+                missedNotes = 0;
+                falseHits = 0;
+                hitNotes = 0;
+                totalNotes = 0;
+                updateStatsDisplay();
+            }
+
+            function updateStatsDisplay() {
+                missedCountEl.innerText = `❌ Пропущено: ${missedNotes}`;
+                falseCountEl.innerText = `⚠️ Ложных: ${falseHits}`;
+                
+                const totalHits = hitNotes + missedNotes;
+                const accuracy = totalHits > 0 ? Math.round((hitNotes / totalHits) * 100) : 100;
+                accuracyStatEl.innerText = `🎯 Точность: ${accuracy}%`;
+            }
+
+            function showFinalResult() {
+                const totalHits = hitNotes + missedNotes;
+                const accuracy = totalHits > 0 ? Math.round((hitNotes / totalHits) * 100) : 100;
+                
+                setTimeout(() => {
+                    alert(`🎮 ИГРА ОКОНЧЕНА!\n\n` +
+                          `📊 Всего нот: ${totalHits}\n` +
+                          `✅ Попаданий: ${hitNotes}\n` +
+                          `❌ Пропущено: ${missedNotes}\n` +
+                          `⚠️ Ложных нажатий: ${falseHits}\n` +
+                          `🎯 Точность: ${accuracy}%`);
+                }, 100);
+            }
+
+            function generateNotesForDuration(durationSec, bpmValue) {
+                notes = [];
+                const beatInterval = 60 / bpmValue;
+                const totalBeats = Math.floor(durationSec * bpmValue / 60);
+                
+                totalNotes = 0;
+                for (let beat = 0; beat < totalBeats; beat++) {
+                    if (beat % 2 === 0) {
+                        const lane = Math.floor(Math.random() * 4);
+                        const spawnTime = beat * beatInterval;
+                        notes.push({ lane, spawnTime, y: 20 });
+                        totalNotes++;
+                    }
+                    
+                    if (beat % 4 === 3) {
+                        const lane = Math.floor(Math.random() * 4);
+                        const spawnTime = beat * beatInterval;
+                        notes.push({ lane, spawnTime, y: 20 });
+                        totalNotes++;
+                    }
+                }
+                
+                notes.sort((a, b) => a.spawnTime - b.spawnTime);
+            }
+
+            async function initAudio() {
+                if (audioCtx) return audioCtx;
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode = audioCtx.createGain();
+                gainNode.connect(audioCtx.destination);
+                gainNode.gain.value = 0.7;
+                return audioCtx;
+            }
+
+            async function playTrack(index, isUser = false, fileBuffer = null) {
+                await initAudio();
+                await audioCtx.resume();
+
+                if (sourceNode) {
+                    try { sourceNode.stop(); } catch(e) {}
+                    sourceNode.disconnect();
+                }
+
+                resetStats();
+
+                let bufferToPlay;
+                let trackName = '';
+                let newBpm = bpm;
+                let duration = 64;
+
+                if (isUser && fileBuffer) {
+                    bufferToPlay = fileBuffer;
+                    trackName = 'Моя музыка';
+                    isUserFile = true;
+                    duration = fileBuffer.duration;
+                    currentDuration = duration;
+                    
+                    newBpm = detectBPM(fileBuffer);
+                    bpm = newBpm;
+                    bpmDisplay.innerText = bpm;
+                } else {
+                    isUserFile = false;
+                    currentTrackIndex = index;
+                    const track = builtinTracks[index];
+                    
+                    if (!track.buffer) {
+                        track.buffer = generateTrack(audioCtx, track.style, track.bpm, track.duration);
+                    }
+                    bufferToPlay = track.buffer;
+                    trackName = track.name;
+                    newBpm = track.bpm;
+                    duration = track.duration;
+                    currentDuration = duration;
+                    bpm = newBpm;
+                    bpmDisplay.innerText = bpm;
+                }
+
+                sourceNode = audioCtx.createBufferSource();
+                sourceNode.buffer = bufferToPlay;
+                sourceNode.connect(gainNode);
+
+                if (trackPausedAt > 0 && trackPausedAt < duration) {
+                    sourceNode.start(0, trackPausedAt);
+                } else {
+                    sourceNode.start(0, 0);
+                    trackPausedAt = 0;
+                }
+
+                trackStartTime = audioCtx.currentTime - trackPausedAt;
+                isPlaying = true;
+                playPauseBtn.innerText = '⏸️ Пауза';
+
+                generateNotesForDuration(duration, bpm);
+
+                nowPlaying.innerText = `💿 Сейчас: ${trackName} (${Math.round(duration)} сек) • BPM: ${bpm} • Кликай мышкой`;
+                
+                totalNotes = notes.length;
+                hitNotes = 0;
+                missedNotes = 0;
+                falseHits = 0;
+                updateStatsDisplay();
+            }
+
+            // Игровой цикл
+            let lastFrameTime = performance.now() / 1000;
+
+            function gameLoop() {
+                const now = performance.now() / 1000;
+                const delta = now - lastFrameTime;
+                lastFrameTime = now;
+
+                if (isPlaying && audioCtx) {
+                    const elapsed = audioCtx.currentTime - trackStartTime;
+                    
+                    const fallSpeed = 150 * (bpm / 120) * delta;
+
+                    for (let i = 0; i < notes.length; i++) {
+                        const note = notes[i];
+                        if (note.spawnTime <= elapsed + 0.5) {
+                            note.y += fallSpeed;
+                        }
+                    }
+
+                    const beforeCount = notes.length;
+                    notes = notes.filter(note => {
+                        if (note.y > canvas.height + 30) {
+                            missedNotes++;
+                            return false;
+                        }
+                        return true;
+                    });
+                    
+                    if (beforeCount !== notes.length) {
+                        updateStatsDisplay();
+                    }
+                    
+                    if (elapsed > currentDuration - 0.5 && sourceNode) {
+                        showFinalResult();
+                    }
+                }
+
+                drawCanvas();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function drawCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0a0d18';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < laneCount; i++) {
+                    ctx.fillStyle = '#111624';
+                    ctx.fillRect(i * laneWidth + 2, 0, laneWidth - 4, canvas.height);
+                }
+
+                ctx.strokeStyle = '#2d3557';
+                ctx.lineWidth = 2;
+                for (let i = 1; i < laneCount; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(i * laneWidth, 0);
+                    ctx.lineTo(i * laneWidth, canvas.height);
+                    ctx.stroke();
+                }
+
+                ctx.fillStyle = '#ffffff0c';
+                ctx.fillRect(0, hitZoneY, canvas.width, hitZoneHeight);
+                ctx.strokeStyle = '#5f6eb0';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(2, hitZoneY, canvas.width - 4, hitZoneHeight);
+
+                for (let note of notes) {
+                    if (note.y < 20) continue;
+                    
+                    const x = note.lane * laneWidth + 8;
+                    const w = laneWidth - 16;
+                    const h = 28;
+                    
+                    const grd = ctx.createLinearGradient(x, note.y, x + w, note.y + h);
+                    grd.addColorStop(0, '#2f354f');
+                    grd.addColorStop(0.7, '#1a1f33');
+                    
+                    ctx.fillStyle = grd;
+                    ctx.shadowColor = '#a0b0ff';
+                    ctx.shadowBlur = note.y > hitZoneY - 50 ? 18 : 8;
+                    ctx.beginPath();
+                    ctx.roundRect(x, note.y, w, h, 10);
+                    ctx.fill();
+
+                    if (note.y > hitZoneY - 40 && note.y < hitZoneY + hitZoneHeight) {
+                        ctx.strokeStyle = '#ffffcc';
+                        ctx.lineWidth = 2.5;
+                        ctx.stroke();
+                    }
+                }
+                ctx.shadowBlur = 0;
+
+                for (let i = 0; i < 4; i++) {
+                    if (laneActive[i]) {
+                        ctx.fillStyle = '#ffffff30';
+                        ctx.fillRect(i * laneWidth, hitZoneY, laneWidth, hitZoneHeight);
+                    }
+                }
+            }
+
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (w < 2 * r) r = w / 2;
+                if (h < 2 * r) r = h / 2;
+                this.moveTo(x + r, y);
+                this.lineTo(x + w - r, y);
+                this.quadraticCurveTo(x + w, y, x + w, y + r);
+                this.lineTo(x + w, y + h - r);
+                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                this.lineTo(x + r, y + h);
+                this.quadraticCurveTo(x, y + h, x, y + h - r);
+                this.lineTo(x, y + r);
+                this.quadraticCurveTo(x, y, x + r, y);
+                return this;
+            };
+
+            function hitLane(lane) {
+                laneActive[lane] = true;
+                laneElements[lane].classList.add('active');
+                setTimeout(() => {
+                    laneActive[lane] = false;
+                    laneElements[lane].classList.remove('active');
+                }, 120);
+
+                let hit = false;
+                for (let i = 0; i < notes.length; i++) {
+                    const note = notes[i];
+                    if (note.lane === lane && note.y >= hitZoneY - 30 && note.y <= hitZoneY + hitZoneHeight + 10) {
+                        notes.splice(i, 1);
+                        hit = true;
+                        hitNotes++;
+                        break;
+                    }
+                }
+                
+                if (!hit) {
+                    falseHits++;
+                }
+                
+                updateStatsDisplay();
+            }
+
+            document.addEventListener('keydown', (e) => {
+                const key = e.key;
+                let lane = -1;
+                if (key === '1') lane = 0;
+                else if (key === '2') lane = 1;
+                else if (key === '3') lane = 2;
+                else if (key === '4') lane = 3;
+                else return;
+                e.preventDefault();
+                hitLane(lane);
+            });
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const mouseX = (e.clientX - rect.left) * scaleX;
+                const lane = Math.floor(mouseX / laneWidth);
+                if (lane >= 0 && lane < 4) hitLane(lane);
+            });
+
+            laneElements.forEach((el, index) => {
+                el.addEventListener('click', () => hitLane(index));
+            });
+
+            playPauseBtn.addEventListener('click', async () => {
+                if (!audioCtx) {
+                    await initAudio();
+                    playTrack(0);
+                } else if (isPlaying) {
+                    await audioCtx.suspend();
+                    isPlaying = false;
+                    playPauseBtn.innerText = '▶️ Играть';
+                    if (sourceNode) {
+                        trackPausedAt = audioCtx.currentTime - trackStartTime;
+                    }
+                } else {
+                    await audioCtx.resume();
+                    isPlaying = true;
+                    playPauseBtn.innerText = '⏸️ Пауза';
+                }
+            });
+
+            document.querySelectorAll('.track-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const idx = parseInt(btn.dataset.track);
+                    await initAudio();
+                    playTrack(idx);
+                });
+            });
+
+            loadMusicBtn.addEventListener('click', () => {
+                audioFile.click();
+            });
+
+            audioFile.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                await initAudio();
+                const arrayBuffer = await file.arrayBuffer();
+                
+                try {
+                    const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+                    
+                    const detectedBPM = detectBPM(decoded);
+                    bpm = detectedBPM;
+                    bpmDisplay.innerText = bpm;
+                    
+                    playTrack(0, true, decoded);
+                    
+                    nowPlaying.innerText = `💿 Сейчас: ${file.name} (${Math.round(decoded.duration)} сек) • BPM: ${bpm} (авто)`;
+                } catch (err) {
+                    console.error(err);
+                    alert('Ошибка загрузки аудио');
+                }
+            });
+
+            canvas.addEventListener('click', async () => {
+                if (!audioCtx) {
+                    await initAudio();
+                    playTrack(0);
+                }
+            });
+
+            // Старт с рок-треком
+            generateNotesForDuration(68, 144);
+            bpmDisplay.innerText = '144';
+            resetStats();
+            requestAnimationFrame(gameLoop);
+        })();
+    </script>
+</body>
+</html>

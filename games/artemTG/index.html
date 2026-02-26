@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f2d">
+  <title>60 секунд</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <!-- Декоративные элементы -->
+  <div class="orbit orbit-1"></div>
+  <div class="orbit orbit-2"></div>
+  <div class="orbit orbit-3"></div>
+  <div class="planet planet-1"></div>
+  <div class="planet planet-2"></div>
+  <div class="planet planet-3"></div>
+
+  <div id="app">
+    <!-- СТАРТОВОЕ МЕНЮ -->
+    <div id="scene-start" class="scene active">
+      <div class="start-container">
+        <div class="main-logo">
+          <h1 class="main-title">60 СЕКУНД</h1>
+        </div>
+        
+        <p class="subtitle">ФИНАНСОВАЯ РПГ</p>
+        
+        <p class="tagline">
+          Прими 12 решений за 60 секунд.<br>
+          Балансируй между Кэшем, Репутацией и Риском.<br>
+          6 уникальных концовок и 30+ достижений ждут тебя!
+        </p>
+        
+        <div class="stats-showcase">
+          <div class="stat-card">
+            <span class="stat-icon-large">₿</span>
+            <div class="stat-label">КЭШ</div>
+            <div class="stat-desc">Твои деньги и капитал</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon-large">⭐</span>
+            <div class="stat-label">РЕПУТАЦИЯ</div>
+            <div class="stat-desc">Доверие и связи</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon-large">⚡</span>
+            <div class="stat-label">РИСК</div>
+            <div class="stat-desc">Волатильность и опасность</div>
+          </div>
+        </div>
+        
+        <div class="main-buttons">
+          <div class="btn-start-container">
+            <button id="btn-start" class="btn-start">
+              <span>🎮 НАЧАТЬ ИГРУ</span>
+            </button>
+          </div>
+          
+          <div class="menu-buttons">
+            <button id="btn-achievements" class="btn-menu-item">
+              <span class="btn-icon">🏆</span>
+              <span class="btn-text">Достижения</span>
+              <span id="unlocked-count" class="btn-badge">0/30</span>
+            </button>
+            
+            <button id="btn-history" class="btn-menu-item">
+              <span class="btn-icon">📜</span>
+              <span class="btn-text">История игр</span>
+              <span id="games-played-count" class="btn-badge">0 игр</span>
+            </button>
+            
+            <button id="btn-stats" class="btn-menu-item">
+              <span class="btn-icon">📊</span>
+              <span class="btn-text">Статистика</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="best-score-card">
+          <span class="best-score-label">🏆 Лучший результат:</span>
+          <span id="best-score" class="best-score-value">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ИГРОВОЙ ЭКРАН -->
+    <div id="scene-game" class="scene">
+      <button id="btn-menu-game" class="btn-menu-game">
+        <span>🏠</span>
+        <span>В меню</span>
+      </button>
+      
+      <div class="game-header">
+        <div class="timer-container">
+          <div id="timer-bar" class="timer-bar"></div>
+          <span id="timer-text" class="timer-text">60</span>
+        </div>
+        <div class="event-counter" id="event-counter">1/12</div>
+      </div>
+
+      <div class="resources-panel glass-panel">
+        <div class="resource-item">
+          <div class="resource-label">₿ Кэш</div>
+          <div class="resource-bar-container">
+            <div class="resource-bar cash-bar">
+              <div id="cash-fill" class="resource-fill" style="width: 50%"></div>
+            </div>
+            <span id="cash-value" class="resource-value">50</span>
+          </div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-label">⭐ Репутация</div>
+          <div class="resource-bar-container">
+            <div class="resource-bar rep-bar">
+              <div id="rep-fill" class="resource-fill" style="width: 50%"></div>
+            </div>
+            <span id="rep-value" class="resource-value">50</span>
+          </div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-label">⚡ Риск</div>
+          <div class="resource-bar-container">
+            <div class="resource-bar risk-bar">
+              <div id="risk-fill" class="resource-fill" style="width: 50%"></div>
+            </div>
+            <span id="risk-value" class="resource-value">50</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="event-container" class="event-container glass-panel">
+        <div id="event-text" class="event-text">Готовься к первому решению...</div>
+        <div class="choices-container">
+          <button id="choice-a" class="choice-btn choice-a">
+            <span class="choice-letter">A</span>
+            <span id="choice-a-text" class="choice-text">Выбор А</span>
+          </button>
+          <button id="choice-b" class="choice-btn choice-b">
+            <span class="choice-letter">B</span>
+            <span id="choice-b-text" class="choice-text">Выбор Б</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН РЕЗУЛЬТАТОВ -->
+    <div id="scene-result" class="scene">
+      <button id="btn-menu-result" class="btn-menu-result">
+        <span>🏠</span>
+        <span>В меню</span>
+      </button>
+      
+      <div class="result-container">
+        <div id="ending-icon" class="ending-icon">🏆</div>
+        <h2 id="ending-title" class="ending-title">Стабильность</h2>
+        <p id="ending-desc" class="ending-desc">Дисциплина победила</p>
+        
+        <div class="final-stats">
+          <div class="stat-final">
+            <span class="stat-icon">₿</span>
+            <span id="final-cash">50</span>
+          </div>
+          <div class="stat-final">
+            <span class="stat-icon">⭐</span>
+            <span id="final-rep">50</span>
+          </div>
+          <div class="stat-final">
+            <span class="stat-icon">⚡</span>
+            <span id="final-risk">50</span>
+          </div>
+        </div>
+
+        <div class="achievements-section">
+          <div class="achievements-title">🏆 Достижения</div>
+          <div id="achievements-list" class="achievements-list"></div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btn-share" class="btn-secondary">
+            <span>📤 Поделиться</span>
+          </button>
+          <button id="btn-restart" class="btn-primary">
+            <span>🔄 Новая игра</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН ДОСТИЖЕНИЙ -->
+    <div id="scene-achievements" class="scene">
+      <button id="btn-back-achievements" class="btn-menu-result">
+        <span>←</span>
+        <span>Назад</span>
+      </button>
+      
+      <div class="achievements-container">
+        <h1 class="section-title">🏆 ДОСТИЖЕНИЯ</h1>
+        <p class="section-subtitle">Разблокировано: <span id="unlocked-total">0</span> из <span id="total-achievements">30</span></p>
+        
+        <div class="achievements-grid" id="all-achievements-grid"></div>
+        
+        <div class="btn-back-container">
+          <button id="btn-back-achievements-2" class="btn-secondary">
+            <span>← Назад в меню</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН ИСТОРИИ -->
+    <div id="scene-history" class="scene">
+      <button id="btn-back-history" class="btn-menu-result">
+        <span>←</span>
+        <span>Назад</span>
+      </button>
+      
+      <div class="history-container">
+        <h1 class="section-title">📜 ИСТОРИЯ ИГР</h1>
+        <p class="section-subtitle">Всего сыграно: <span id="total-games">0</span> игр</p>
+        
+        <div class="history-list" id="history-list"></div>
+        
+        <div class="btn-back-container">
+          <button id="btn-back-history-2" class="btn-secondary">
+            <span>← Назад в меню</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЭКРАН СТАТИСТИКИ -->
+    <div id="scene-stats" class="scene">
+      <button id="btn-back-stats" class="btn-menu-result">
+        <span>←</span>
+        <span>Назад</span>
+      </button>
+      
+      <div class="stats-container">
+        <h1 class="section-title">📊 ОБЩАЯ СТАТИСТИКА</h1>
+        
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-box-icon">🎮</div>
+            <div class="stat-box-label">Всего игр</div>
+            <div id="stat-total-games" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">🏆</div>
+            <div class="stat-box-label">Достижений</div>
+            <div id="stat-total-achievements" class="stat-box-value">0/30</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">💰</div>
+            <div class="stat-box-label">Средний кэш</div>
+            <div id="stat-avg-cash" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">⭐</div>
+            <div class="stat-box-label">Средняя репутация</div>
+            <div id="stat-avg-rep" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">⚡</div>
+            <div class="stat-box-label">Средний риск</div>
+            <div id="stat-avg-risk" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">🛡️</div>
+            <div class="stat-box-label">Безопасных решений</div>
+            <div id="stat-safe-choices" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">🎲</div>
+            <div class="stat-box-label">Рискованных решений</div>
+            <div id="stat-risky-choices" class="stat-box-value">0</div>
+          </div>
+          
+          <div class="stat-box">
+            <div class="stat-box-icon">🎯</div>
+            <div class="stat-box-label">Лучший результат</div>
+            <div id="stat-best-score" class="stat-box-value">0</div>
+          </div>
+        </div>
+        
+        <div class="endings-section">
+          <h2 class="section-subtitle">Концовки:</h2>
+          <div id="endings-list" class="endings-grid"></div>
+        </div>
+        
+        <div class="btn-back-container">
+          <button id="btn-back-stats-2" class="btn-secondary">
+            <span>← Назад в меню</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="src/core/utils.js"></script>
+  <script src="src/core/storage.js"></script>
+  <script src="src/core/timer.js"></script>
+  <script src="src/core/input.js"></script>
+  <script src="src/core/audio.js"></script>
+  <script src="src/core/engine.js"></script>
+  <script src="src/game/state.js"></script>
+  <script src="src/game/rules.js"></script>
+  <script src="src/game/ui.js"></script>
+  <script src="src/game/scenes.js"></script>
+  <script src="api.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

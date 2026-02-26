@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Космическая стрелялка</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Меню -->
+  <div id="menu" class="screen">
+    <h1>Космическая стрелялка</h1>
+    <p>Игру делал: Дима, 9 лет</p>
+    <button id="startBtn">Начать игру</button>
+  </div>
+
+  <!-- Игровое поле (скрыто до старта) -->
+  <canvas id="gameCanvas" width="480" height="640" class="hidden"></canvas>
+
+  <!-- Результат -->
+  <div id="result" class="screen hidden">
+    <h2>Игра окончена!</h2>
+    <p>Очки: <span id="finalScore">0</span></p>
+    <button id="restartBtn">Играть снова</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

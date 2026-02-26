@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+.screen {
+    display: none;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.screen.active {
+    display: block;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+p {
+    font-size: 1rem;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+button {
+    background: #ffcc00;
+    color: #121212;
+    border: none;
+    padding: 12px 32px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #ffd700;
+}
+
+#timer, #score {
+    position: absolute;
+    top: 10px;
+    font-size: 1.1rem;
+    background: rgba(0,0,0,0.7);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #ffcc00;
+}
+
+#timer { left: 10px; }
+#score { right: 10px; }
+
+.star {
+    width: 60px;
+    height: 60px;
+    background-image: url('assets/star.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; /* ← ИСПРАВЛЕНО */
+    position: absolute;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#star {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#result-screen h2 {
+    font-size: 2rem;
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+
+#record-info {
+    color: #ffcc00;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 2rem; }
+    button { font-size: 1rem; padding: 10px 24px; }
+    .star { width: 50px; height: 50px; }
+}

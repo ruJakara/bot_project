@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow-x: hidden;
+    color: #fff;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.screen {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 500px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #FFD700;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    color: #e0e0ff;
+}
+
+/* Стартовый экран */
+.logo {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #FF416C, #FF4B2B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.instructions {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.instructions ul {
+    list-style: none;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.instructions li {
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+}
+
+.instructions li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+/* Игровой экран */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+}
+
+.timer, .score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.timer {
+    color: #FF6B6B;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.tile {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.tile:hover {
+    transform: scale(1.05);
+}
+
+.tile.selected {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 3px #FFD700;
+}
+
+.tile.matched {
+    animation: matchAnimation 0.5s ease-out;
+}
+
+@keyframes matchAnimation {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Экран результата */
+.result-score {
+    font-size: 4rem;
+    font-weight: bold;
+    margin: 20px 0;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: scorePulse 1s infinite alternate;
+}
+
+@keyframes scorePulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+.stars {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.star {
+    font-size: 2.5rem;
+    color: #555;
+    transition: color 0.5s;
+}
+
+.star.active {
+    color: #FFD700;
+    animation: starTwinkle 1s;
+}
+
+@keyframes starTwinkle {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Кнопки */
+.btn {
+    background: linear-gradient(45deg, #FF416C, #FF4B2B);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 250px;
+    box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 65, 108, 0.6);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #2193b0, #6dd5ed);
+    box-shadow: 0 5px 15px rgba(33, 147, 176, 0.4);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 8px 20px rgba(33, 147, 176, 0.6);
+}
+
+/* Меню с информацией о создателе */
+.creator-info {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+}
+
+.creator-info span {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+/* Адаптивность */
+@media (max-width: 500px) {
+    .game-container {
+        padding: 5px;
+    }
+    
+    .screen {
+        padding: 20px 15px;
+        min-height: 450px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .logo {
+        font-size: 3rem;
+    }
+    
+    .game-board {
+        gap: 4px;
+        padding: 8px;
+    }
+    
+    .tile {
+        border-radius: 6px;
+    }
+    
+    .result-score {
+        font-size: 3rem;
+    }
+    
+    .btn {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+    }
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Лагерь в Потеряевке</title>
+    
+    <!-- 🔇 Подавляем предупреждения Telegram WebApp при запуске вне Telegram -->
+    <script>
+    if (!window.Telegram) {
+        const originalWarn = console.warn;
+        console.warn = function (...args) {
+            if (args[0] && typeof args[0] === 'string' && args[0].includes('[Telegram.WebApp]')) {
+                return; // Игнорируем только предупреждения Telegram
+            }
+            originalWarn.apply(console, args);
+        };
+    }
+    </script>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Главное меню -->
+        <div id="main-menu-screen" class="screen active">
+            <div class="main-menu-content">
+                <div class="logo-animated">🏕️🔥 Лагерь Потеряевки</div>
+                <p class="tagline">Построй бизнес мечты за 7 дней!</p>
+                
+                <div class="menu-buttons">
+                    <button id="play-btn" class="menu-btn primary">🎮 Начать неделю</button>
+                    <button id="stats-overview-btn" class="menu-btn secondary">📊 Статистика</button>
+                    <button id="dlc-btn" class="menu-btn premium">💎 DLC</button>
+                    <button id="exit-btn" class="menu-btn danger">❌ Выйти</button>
+                </div>
+                
+                <button id="theme-toggle" class="theme-btn">🌓 Тема</button>
+                <div class="author-badge">создал: <span>Hoper 14</span></div>
+            </div>
+
+            <div class="forest-bg">
+                <div class="tree tree-1"></div>
+                <div class="tree tree-2"></div>
+                <div class="tree tree-3"></div>
+                <div class="fire"></div>
+            </div>
+        </div>
+
+        <!-- Статистика -->
+        <div id="stats-overview-screen" class="screen">
+            <h2 class="result-title">📊 Статистика</h2>
+            <div class="result-stats">
+                <div class="result-item">🏆 Рекорд: <span id="overview-record">—</span></div>
+                <div class="result-item">✅ Завершённых недель: <span id="overview-weeks">0</span></div>
+                <div class="result-item">📅 Всего дней выполнено: <span id="overview-days">0</span></div>
+            </div>
+            <button id="back-to-main-btn" class="big-btn gradient-btn">⬅️ Назад</button>
+            <div class="creator">создал: Hoper 14</div>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="day-info">
+                    📅 День <span id="current-day">1</span>/7
+                    <span class="timer">⏰ <span id="timer">60</span>с</span>
+                </div>
+                <div class="money-display">$<span id="money">50</span></div>
+                <button id="pause-btn" class="pause-btn">⏸️</button>
+            </div>
+
+            <div class="quota-card">
+                <div class="quota-header">🎯 КВОТА ДНЯ</div>
+                $<span id="quota">80</span>
+                <div class="quota-progress">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <span id="quota-progress">0/80</span>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="tourists">👥 Туристы</button>
+                    <button class="tab-btn" data-tab="workers">👷 Работа</button>
+                    <button class="tab-btn" data-tab="ads">📢 Реклама</button>
+                    <button class="tab-btn" data-tab="stats">📊 Статистика</button>
+                </div>
+
+                <div id="tourists-tab" class="tab-content active">
+                    <div class="upgrade-grid">
+                        <div class="upgrade-item" data-type="tourist-basic">
+                            <div class="upgrade-icon">👤</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Одиночный турист</div>
+                                <div class="upgrade-cost">$<span>8</span></div>
+                            </div>
+                            <button class="buy-btn">Привлечь</button>
+                        </div>
+                        <div class="upgrade-item" data-type="tourist-group">
+                            <div class="upgrade-icon">👨‍👩‍👧‍👦</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Группа туристов</div>
+                                <div class="upgrade-cost">$<span>22</span></div>
+                            </div>
+                            <button class="buy-btn">Привлечь</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="workers-tab" class="tab-content">
+                    <div class="upgrade-grid">
+                        <div class="upgrade-item" data-type="worker-junior">
+                            <div class="upgrade-icon">🧑‍💼</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Помощник</div>
+                                <div class="upgrade-cost">$<span>25</span></div>
+                            </div>
+                            <button class="buy-btn">Нанять</button>
+                        </div>
+                        <div class="upgrade-item" data-type="worker-senior">
+                            <div class="upgrade-icon">👨‍💼</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Администратор</div>
+                                <div class="upgrade-cost">$<span>70</span></div>
+                            </div>
+                            <button class="buy-btn">Нанять</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ads-tab" class="tab-content">
+                    <div class="upgrade-grid">
+                        <div class="upgrade-item" data-type="ads-flyers">
+                            <div class="upgrade-icon">📄</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Листовки</div>
+                                <div class="upgrade-cost">$<span>15</span></div>
+                            </div>
+                            <button class="buy-btn">Раздать</button>
+                        </div>
+                        <div class="upgrade-item" data-type="ads-social">
+                            <div class="upgrade-icon">📱</div>
+                            <div class="upgrade-info">
+                                <div class="upgrade-name">Соцсети</div>
+                                <div class="upgrade-cost">$<span>50</span></div>
+                            </div>
+                            <button class="buy-btn">Запустить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stats-tab" class="tab-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-visitors">0</div>
+                            <div class="stat-label">Всего туристов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-workers">0</div>
+                            <div class="stat-label">Сотрудников</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-ads">0</div>
+                            <div class="stat-label">Реклама</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Экран окончания дня -->
+        <div id="day-result-screen" class="screen">
+            <div class="day-result-container">
+                <h2 class="day-title">✅ День <span id="day-number">1</span> завершён!</h2>
+                <div class="day-result-money">Заработано: $<span id="day-earned">0</span></div>
+                <div class="day-result-quota">
+                    <div class="quota-status">Квота: $<span id="day-quota-target-val">80</span></div>
+                    <div class="quota-result" id="quota-result-text">НЕ ВЫПОЛНЕНА</div>
+                </div>
+                <div class="day-stats-detail">
+                    <div>👥 Туристов: <span id="day-visitors">0</span></div>
+                    <div>👷 Сотрудников: <span id="day-workers">0</span></div>
+                    <div>📢 Активной рекламы: <span id="day-ads">0</span></div>
+                    <div>📈 Эффективность: <span id="day-efficiency">100</span>%</div>
+                </div>
+                <button id="next-day-btn" class="big-btn gradient-btn">Следующий день</button>
+                <button id="retry-day-btn" class="big-btn gradient-btn" style="display:none;">🔄 Повторить день</button>
+            </div>
+            <div class="creator">создал: Hoper 14</div>
+        </div>
+
+        <!-- Финальный экран -->
+        <div id="result-screen" class="screen">
+            <h2 class="result-title">🏆 Неделя завершена!</h2>
+            <div class="result-stats">
+                <div class="result-item">💰 Прибыль: $<span id="final-money">0</span></div>
+                <div class="result-item">📅 Дней выполнено: <span id="completed-days">0</span>/7</div>
+                <div class="result-item">🏆 Рекорд: $<span id="record-score">0</span></div>
+            </div>
+            <button id="restart-btn" class="big-btn gradient-btn">🔄 Новая неделя</button>
+            <button id="menu-btn" class="big-btn gradient-btn">🏠 В главное меню</button>
+            <div class="creator">создал: Hoper 14</div>
+        </div>
+
+        <!-- Экран рейтинга -->
+        <div id="leaderboard-screen" class="screen">
+            <div class="leaderboard-container">
+                <h2 class="result-title">🏆 Попади в рейтинг!</h2>
+                <p class="leaderboard-desc">Ты заработал $<span id="submit-score">0</span>!</p>
+                <input type="text" id="player-name" placeholder="Введи своё имя" maxlength="15" class="name-input">
+                <button id="submit-leaderboard-btn" class="big-btn gradient-btn">📤 Отправить</button>
+                <button id="skip-leaderboard-btn" class="big-btn gradient-btn secondary">Пропустить</button>
+            </div>
+            <div class="creator">создал: Hoper 14</div>
+        </div>
+
+        <!-- Экран DLC -->
+        <div id="dlc-screen" class="screen">
+            <h2 class="result-title">💎 Премиум-контент</h2>
+            
+            <div class="dlc-grid">
+                <div class="dlc-card">
+                    <div class="dlc-icon">🚋</div>
+                    <h3>Трамвай в Молочном</h3>
+                    <p>Построй трамвайные пути в селе Молочном</p>
+                    <div class="dlc-status">Скоро выйдет</div>
+                </div>
+                
+                <div class="dlc-card">
+                    <div class="dlc-icon">🎉</div>
+                    <h3>Вечеринка на острове</h3>
+                    <p>Устрой вечеринку на острове Эпштейна</p>
+                    <div class="dlc-status">Скоро выйдет</div>
+                </div>
+                
+                <div class="dlc-card">
+                    <div class="dlc-icon">🏗️</div>
+                    <h3>Дома в Мурино</h3>
+                    <p>Построй жилые комплексы в Мурино</p>
+                    <div class="dlc-status">Скоро выйдет</div>
+                </div>
+            </div>
+            
+            <button id="back-to-main-dlc-btn" class="big-btn gradient-btn">⬅️ Назад</button>
+            <div class="creator">создал: Hoper 14</div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

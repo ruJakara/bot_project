@@ -1,0 +1,2917 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW SLAYER · ЧИСТЫЙ ГЕЙМПЛЕЙ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0a0715;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        .menu-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0c0920, #1a1535, #0a0718);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .menu-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .menu-card {
+            background: rgba(18, 14, 35, 0.96);
+            backdrop-filter: blur(15px);
+            border: 5px solid #e6b061;
+            border-radius: 90px;
+            padding: 80px 120px;
+            text-align: center;
+            box-shadow: 0 50px 100px black, 0 0 150px #ffaa33;
+            animation: menuGlow 3s infinite;
+        }
+
+        @keyframes menuGlow {
+            0% { box-shadow: 0 50px 100px black, 0 0 80px #ffaa33; }
+            50% { box-shadow: 0 50px 120px black, 0 0 180px #ff7700; }
+            100% { box-shadow: 0 50px 100px black, 0 0 80px #ffaa33; }
+        }
+
+        .menu-title {
+            font-size: 7rem;
+            font-weight: 900;
+            color: #ffe5b4;
+            text-shadow: 0 0 50px #ffaa00, 0 0 100px #ff5500, 10px 10px 0 #4a3000;
+            letter-spacing: 10px;
+            margin-bottom: 30px;
+        }
+
+        .menu-sub {
+            font-size: 2.3rem;
+            color: #bfd0ff;
+            margin-bottom: 60px;
+            text-shadow: 0 0 20px #2266ff;
+        }
+
+        .menu-btn {
+            background: #322c4a;
+            border: 6px solid #ffb347;
+            color: #fff2d4;
+            font-size: 3rem;
+            font-weight: bold;
+            padding: 35px 100px;
+            border-radius: 100px;
+            margin: 25px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 20px 0 #7f582b, 0 30px 50px black;
+            text-transform: uppercase;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 0 #7f582b, 0 40px 60px black;
+            background: #45406b;
+        }
+
+        .menu-btn:active {
+            transform: translateY(10px);
+            box-shadow: 0 10px 0 #7f582b, 0 20px 40px black;
+        }
+
+        .controls-info {
+            color: #b7c2da;
+            font-size: 1.8rem;
+            margin-top: 50px;
+            background: #1e1b30;
+            padding: 30px 60px;
+            border-radius: 80px;
+            border: 2px solid #8f7ab0;
+        }
+
+        .game-wrapper {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .game-wrapper.active {
+            display: block;
+        }
+
+        .game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .top-panel {
+            background: rgba(18, 22, 40, 0.85);
+            backdrop-filter: blur(8px);
+            border: 4px solid #e0b36b;
+            border-radius: 70px;
+            padding: 15px 35px;
+            display: flex;
+            justify-content: space-between;
+            color: #fff0cc;
+            font-size: 2.2rem;
+            font-weight: bold;
+            pointer-events: auto;
+            margin-bottom: 15px;
+        }
+
+        .wave-info {
+            background: linear-gradient(45deg, #4a2f1a, #7a4f2a);
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: 3px solid #ffb56b;
+            text-shadow: 2px 2px 0 #3d2a10;
+        }
+
+        .boss-info {
+            background: linear-gradient(45deg, #4a1a2a, #8f3f4f);
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: 3px solid #ff6b9f;
+            text-shadow: 2px 2px 0 #2a0a1a;
+            color: #ffd9e6;
+            animation: bossPulse 2s infinite;
+        }
+
+        @keyframes bossPulse {
+            0% { box-shadow: 0 0 20px #ff4f8f; }
+            50% { box-shadow: 0 0 50px #ff1f4f; }
+            100% { box-shadow: 0 0 20px #ff4f8f; }
+        }
+
+        .gold-box {
+            background: #352e1f;
+            padding: 10px 40px;
+            border-radius: 60px;
+            border: 3px solid #f7c56e;
+            box-shadow: inset 0 0 25px #4a3a1a;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            pointer-events: auto;
+            margin-top: 10px;
+        }
+
+        .stat-card {
+            background: rgba(26, 30, 45, 0.9);
+            backdrop-filter: blur(4px);
+            border: 3px solid #cfa96b;
+            border-radius: 50px;
+            padding: 12px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            color: #fad9a3;
+        }
+
+        .hp-bar-big {
+            width: 180px;
+            height: 28px;
+            background: #2e1d1d;
+            border-radius: 40px;
+            border: 3px solid #c06666;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #e74c3c, #ff9f8f);
+            transition: width 0.1s;
+        }
+
+        .left-buttons {
+            position: absolute;
+            left: 30px;
+            bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 200;
+        }
+
+        .shop-toggle-btn {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #6ba5ff, #1a4b9f);
+            border: 5px solid #aad0ff;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #3f7fff, 0 10px 0 #0a2a55;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 0 #002266;
+            animation: pulseBlue 2s infinite;
+        }
+
+        .shop-toggle-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 40px #6ba5ff, 0 2px 0 #0a2a55;
+        }
+
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 30px #3f7fff, 0 10px 0 #0a2a55; }
+            50% { box-shadow: 0 0 60px #7fb5ff, 0 10px 0 #0a2a55; }
+            100% { box-shadow: 0 0 30px #3f7fff, 0 10px 0 #0a2a55; }
+        }
+
+        .upgrade-toggle-btn {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #c56bff, #4a1a9f);
+            border: 5px solid #e0aaff;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #9f3fff, 0 10px 0 #2a0a55;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 0 #330066;
+            animation: pulsePurple 2s infinite;
+        }
+
+        .upgrade-toggle-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 40px #c56bff, 0 2px 0 #2a0a55;
+        }
+
+        @keyframes pulsePurple {
+            0% { box-shadow: 0 0 30px #9f3fff, 0 10px 0 #2a0a55; }
+            50% { box-shadow: 0 0 60px #c56bff, 0 10px 0 #2a0a55; }
+            100% { box-shadow: 0 0 30px #9f3fff, 0 10px 0 #2a0a55; }
+        }
+
+        .forge-toggle-btn {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #ff8c4f, #b84f1a);
+            border: 5px solid #ffb57a;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #ff6f3f, 0 10px 0 #7f3f1a;
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 0 #4f2a0a;
+            animation: pulseOrange 2s infinite;
+        }
+
+        .forge-toggle-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 40px #ff8c4f, 0 2px 0 #7f3f1a;
+        }
+
+        @keyframes pulseOrange {
+            0% { box-shadow: 0 0 30px #ff6f3f, 0 10px 0 #7f3f1a; }
+            50% { box-shadow: 0 0 60px #ffaa6f, 0 10px 0 #7f3f1a; }
+            100% { box-shadow: 0 0 30px #ff6f3f, 0 10px 0 #7f3f1a; }
+        }
+
+        .weapon-shop {
+            position: absolute;
+            left: 130px;
+            bottom: 100px;
+            background: rgba(22, 28, 45, 0.98);
+            backdrop-filter: blur(15px);
+            border: 4px solid #b59457;
+            border-radius: 60px;
+            padding: 25px;
+            z-index: 250;
+            pointer-events: auto;
+            display: none;
+            gap: 20px;
+            box-shadow: 0 20px 40px black, 0 0 60px gold;
+            max-width: 80vw;
+            overflow-x: auto;
+        }
+
+        .weapon-shop.open {
+            display: flex;
+        }
+
+        .weapon-card {
+            border: 3px solid #dba144;
+            border-radius: 50px;
+            padding: 20px 25px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #262e48;
+            box-shadow: 0 8px 0 #6f4f24;
+            min-width: 170px;
+        }
+
+        .weapon-card:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #6f4f24;
+        }
+
+        .weapon-card.selected {
+            border-color: #ffd966;
+            background: #3f4a6b;
+            box-shadow: 0 0 30px gold, 0 8px 0 #6f4f24;
+        }
+
+        .weapon-emoji {
+            font-size: 3.8rem;
+        }
+
+        .weapon-name {
+            font-size: 1.7rem;
+            color: #fff0c0;
+            font-weight: bold;
+        }
+
+        .weapon-damage {
+            font-size: 1.5rem;
+            color: #ffb56b;
+        }
+
+        .weapon-range {
+            font-size: 1.5rem;
+            color: #6bd4ff;
+        }
+
+        .weapon-price {
+            font-size: 1.7rem;
+            color: #ffd966;
+        }
+
+        .upgrade-tree {
+            position: absolute;
+            left: 130px;
+            bottom: 50px;
+            background: rgba(35, 25, 55, 0.98);
+            backdrop-filter: blur(15px);
+            border: 4px solid #b87cd9;
+            border-radius: 60px;
+            padding: 25px;
+            z-index: 250;
+            pointer-events: auto;
+            display: none;
+            gap: 20px;
+            box-shadow: 0 20px 40px black, 0 0 60px #c56bff;
+            max-width: 90vw;
+            overflow-x: auto;
+        }
+
+        .upgrade-tree.open {
+            display: flex;
+        }
+
+        .upgrade-category {
+            background: rgba(45, 35, 65, 0.8);
+            border: 3px solid #b070db;
+            border-radius: 40px;
+            padding: 20px;
+            min-width: 260px;
+        }
+
+        .upgrade-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 2rem;
+            color: #e9c0ff;
+            border-bottom: 2px solid #b070db;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .upgrade-levels {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .upgrade-item {
+            background: rgba(25, 20, 35, 0.9);
+            border: 2px solid #9a5fc9;
+            border-radius: 30px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .upgrade-item:hover {
+            background: #3f3160;
+            border-color: #d49dff;
+        }
+
+        .upgrade-item:active {
+            transform: scale(0.98);
+        }
+
+        .upgrade-item.maxed {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border-color: #555;
+        }
+
+        .upgrade-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .upgrade-level {
+            font-size: 1.3rem;
+            color: #d4b5ff;
+        }
+
+        .upgrade-effect {
+            font-size: 1.5rem;
+            color: #ffe29a;
+            font-weight: bold;
+        }
+
+        .upgrade-cost {
+            font-size: 1.6rem;
+            color: #ffd966;
+            background: #2a1f30;
+            padding: 5px 15px;
+            border-radius: 30px;
+            border: 1px solid gold;
+            margin-left: 10px;
+        }
+
+        .upgrade-desc {
+            font-size: 1.2rem;
+            color: #b8a5d9;
+            margin-top: 2px;
+        }
+
+        .forge-tree {
+            position: absolute;
+            left: 130px;
+            bottom: 100px;
+            background: rgba(45, 30, 25, 0.98);
+            backdrop-filter: blur(15px);
+            border: 4px solid #ff9f4f;
+            border-radius: 60px;
+            padding: 25px;
+            z-index: 250;
+            pointer-events: auto;
+            display: none;
+            gap: 25px;
+            box-shadow: 0 20px 40px black, 0 0 60px #ff8c4f;
+            max-width: 80vw;
+            overflow-x: auto;
+        }
+
+        .forge-tree.open {
+            display: flex;
+        }
+
+        .forge-card {
+            background: rgba(55, 40, 30, 0.9);
+            border: 3px solid #ff8c4f;
+            border-radius: 50px;
+            padding: 25px;
+            min-width: 240px;
+            text-align: center;
+        }
+
+        .forge-title {
+            font-size: 2.2rem;
+            color: #ffd9a3;
+            text-shadow: 0 0 20px orange;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff8c4f;
+            padding-bottom: 10px;
+        }
+
+        .enchant-slot {
+            background: #3a2a1f;
+            border: 3px solid #b87c4b;
+            border-radius: 40px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .current-enchant {
+            font-size: 2rem;
+            color: #ffd966;
+            margin-bottom: 10px;
+        }
+
+        .enchant-level {
+            font-size: 1.4rem;
+            color: #b8a5d9;
+        }
+
+        .enchant-btn {
+            background: #4f3f2a;
+            border: 4px solid #ff9f4f;
+            color: #ffe0b0;
+            font-size: 1.8rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px 0;
+            box-shadow: 0 8px 0 #6f4f2a;
+            transition: 0.1s;
+            width: 100%;
+        }
+
+        .enchant-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #6f4f2a;
+        }
+
+        .enchant-btn:disabled {
+            opacity: 0.4;
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #6f4f2a;
+            pointer-events: none;
+        }
+
+        .enchant-cost {
+            font-size: 1.6rem;
+            color: #ffd966;
+            margin-top: 10px;
+        }
+
+        .enchant-desc {
+            font-size: 1.3rem;
+            color: #b8a5d9;
+            margin-top: 5px;
+        }
+
+        .pause-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pause-menu.active {
+            display: flex;
+        }
+
+        .pause-card {
+            background: rgba(25, 20, 35, 0.95);
+            border: 5px solid #d9a066;
+            border-radius: 80px;
+            padding: 60px 100px;
+            text-align: center;
+            box-shadow: 0 30px 60px black, 0 0 100px #ffaa33;
+        }
+
+        .pause-title {
+            font-size: 5rem;
+            color: #ffd9a3;
+            text-shadow: 0 0 30px orange;
+            margin-bottom: 50px;
+        }
+
+        .pause-btn {
+            background: #322c4a;
+            border: 5px solid #ffb347;
+            color: #fff2d4;
+            font-size: 2.5rem;
+            padding: 25px 70px;
+            border-radius: 70px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 10px 0 #7f582b;
+            width: 400px;
+        }
+
+        .pause-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #7f582b;
+        }
+
+        .gameover-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gameover-menu.active {
+            display: flex;
+        }
+
+        .gameover-card {
+            background: rgba(40, 20, 30, 0.98);
+            border: 5px solid #ff6b6b;
+            border-radius: 80px;
+            padding: 80px 120px;
+            text-align: center;
+            box-shadow: 0 0 150px #ff0000, 0 30px 60px black;
+            animation: gameoverPulse 2s infinite;
+        }
+
+        @keyframes gameoverPulse {
+            0% { box-shadow: 0 0 100px #ff0000; }
+            50% { box-shadow: 0 0 200px #ff4f4f; }
+            100% { box-shadow: 0 0 100px #ff0000; }
+        }
+
+        .gameover-title {
+            font-size: 6rem;
+            color: #ffaaaa;
+            text-shadow: 0 0 50px #ff0000, 0 0 100px #ff4f4f;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .gameover-stats {
+            font-size: 2.5rem;
+            color: #ffd9a3;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50px;
+            border: 2px solid #ff6b6b;
+        }
+
+        .gameover-stats div {
+            margin: 15px 0;
+        }
+
+        .gameover-btns {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .gameover-btn {
+            background: #322c4a;
+            border: 5px solid #ffb347;
+            color: #fff2d4;
+            font-size: 2.2rem;
+            padding: 20px 50px;
+            border-radius: 70px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 10px 0 #7f582b;
+            min-width: 250px;
+        }
+
+        .gameover-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #7f582b;
+        }
+
+        .gameover-btn.restart {
+            border-color: #6bff6b;
+            box-shadow: 0 10px 0 #2f7f2f;
+        }
+
+        .gameover-btn.menu {
+            border-color: #6b9fff;
+            box-shadow: 0 10px 0 #2f4f7f;
+        }
+
+        .settings-panel {
+            background: #2a1f35;
+            border: 3px solid #b59457;
+            border-radius: 50px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 2rem;
+            color: #ffd9a3;
+        }
+
+        .setting-slider {
+            width: 200px;
+            height: 10px;
+            background: #4f3f5a;
+            border-radius: 10px;
+            -webkit-appearance: none;
+        }
+
+        .setting-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #ffb347;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px gold;
+        }
+
+        .setting-value {
+            min-width: 60px;
+            color: #ffd966;
+        }
+
+        .minimap {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            height: 250px;
+            background: rgba(10, 10, 20, 0.9);
+            border: 4px solid #7a6a4f;
+            border-radius: 30px;
+            box-shadow: 0 0 30px #000, inset 0 0 30px #1a1a2a;
+            z-index: 150;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .minimap.active {
+            display: block;
+        }
+
+        .minimap canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 26px;
+            display: block;
+        }
+
+        .minimap-toggle {
+            position: absolute;
+            top: 20px;
+            right: 290px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #8b6f4f, #4f3a2a);
+            border: 4px solid #d9a066;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 0 #3d2a10;
+            box-shadow: 0 0 20px #b87c4b;
+        }
+
+        .minimap-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* ТОЛЬКО СООБЩЕНИЯ ОТ СУНДУКОВ */
+        .message-area {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 500;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .chest-message {
+            font-size: 4rem;
+            color: #ffd966;
+            text-shadow: 0 0 50px gold, 0 0 100px orange;
+            margin: 20px;
+            animation: chestMessageFade 2s ease-out forwards;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        @keyframes chestMessageFade {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) translateY(0);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1.2) translateY(-20px);
+            }
+            40% {
+                transform: scale(1) translateY(-40px);
+            }
+            80% {
+                opacity: 1;
+                transform: translateY(-80px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px);
+            }
+        }
+
+        .chest-counter {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #d9a066;
+            border-radius: 40px;
+            padding: 10px 25px;
+            color: #ffd9a3;
+            font-size: 1.8rem;
+            z-index: 150;
+            backdrop-filter: blur(4px);
+        }
+
+        .chest-counter span {
+            color: #ffd966;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: #1a2a35;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container" id="mainMenu">
+        <div class="menu-card">
+            <div class="menu-title">SHADOW SLAYER</div>
+            <div class="menu-sub">Чистый геймплей</div>
+            <button class="menu-btn" id="startGame">⚔️ ВОЙТИ</button>
+            <div class="controls-info">
+                🎮 УПРАВЛЕНИЕ:<br>
+                WASD - движение<br>
+                SHIFT - бег<br>
+                ЛКМ - атака<br>
+                ESC - пауза<br>
+                M - карта<br>
+                📦 СУНДУКИ КАЖДЫЕ 30 СЕКУНД
+            </div>
+        </div>
+    </div>
+
+    <div class="game-wrapper" id="gameWrapper">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- ЗВУКИ (скрытые аудио элементы) -->
+        <audio id="swordSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="hitSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="killSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="chestSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="buySound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="levelUpSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        <audio id="bossSound" preload="auto">
+            <source src="data:audio/wav;base64,UklGRlwAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVQAAACEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhA==" type="audio/wav">
+        </audio>
+        
+        <!-- МЕНЮ ПАУЗЫ -->
+        <div class="pause-menu" id="pauseMenu">
+            <div class="pause-card">
+                <div class="pause-title">⏸ ПАУЗА</div>
+                
+                <button class="pause-btn" id="resumeBtn">ПРОДОЛЖИТЬ</button>
+                
+                <div class="settings-panel">
+                    <div class="setting-item">
+                        <span>🔊 ГРОМКОСТЬ</span>
+                        <input type="range" class="setting-slider" id="volumeSlider" min="0" max="100" value="70">
+                        <span class="setting-value" id="volumeValue">70%</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>🎮 ЧУВСТВИТЕЛЬНОСТЬ</span>
+                        <input type="range" class="setting-slider" id="sensitivitySlider" min="50" max="200" value="100">
+                        <span class="setting-value" id="sensitivityValue">100%</span>
+                    </div>
+                </div>
+                
+                <button class="pause-btn" id="quitToMenuBtn">🏠 В МЕНЮ</button>
+            </div>
+        </div>
+        
+        <!-- МЕНЮ ПОСЛЕ СМЕРТИ -->
+        <div class="gameover-menu" id="gameoverMenu">
+            <div class="gameover-card">
+                <div class="gameover-title">💀 ВЫ ПОГИБЛИ 💀</div>
+                
+                <div class="gameover-stats" id="gameoverStats">
+                    <div>🌊 Достигнута волна: <span id="gameoverWave">1</span></div>
+                    <div>⚔️ Убито врагов: <span id="gameoverKills">0</span></div>
+                    <div>💰 Собрано золота: <span id="gameoverGold">0</span></div>
+                </div>
+                
+                <div class="gameover-btns">
+                    <button class="gameover-btn restart" id="restartBtn">🔄 ЗАНОВО</button>
+                    <button class="gameover-btn menu" id="gameoverToMenuBtn">🏠 В МЕНЮ</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ТОЛЬКО СООБЩЕНИЯ ОТ СУНДУКОВ -->
+        <div class="message-area" id="messageArea"></div>
+        
+        <!-- СЧЕТЧИК СУНДУКОВ -->
+        <div class="chest-counter">
+            📦 <span id="chestCount">0</span>/4
+        </div>
+        
+        <!-- МИНИ-КАРТА -->
+        <div class="minimap-toggle" id="minimapToggle">🗺️</div>
+        <div class="minimap" id="minimap">
+            <canvas id="minimapCanvas" width="250" height="250"></canvas>
+        </div>
+        
+        <div class="game-ui">
+            <div class="top-panel">
+                <span class="wave-info" id="waveDisplay">🌊 ВОЛНА 1</span>
+                <span class="gold-box" id="goldDisplay">💰 150</span>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <span>❤️</span>
+                    <div class="hp-bar-big">
+                        <div id="hpBar" class="hp-fill" style="width:100%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span>⚔️ <span id="damageStat">5</span></span>
+                </div>
+                <div class="stat-card">
+                    <span>📏 <span id="rangeStat">60</span></span>
+                </div>
+                <div class="stat-card">
+                    <span>🛡️ <span id="defenseStat">2</span></span>
+                </div>
+                <div class="stat-card">
+                    <span>💀 <span id="killsStat">0</span></span>
+                </div>
+                <div class="stat-card">
+                    <span>⚡ <span id="speedStat">5.0</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="left-buttons">
+            <div class="shop-toggle-btn" id="shopToggle">🛒</div>
+            <div class="upgrade-toggle-btn" id="upgradeToggle">🔮</div>
+            <div class="forge-toggle-btn" id="forgeToggle">🔧</div>
+        </div>
+
+        <div class="weapon-shop" id="weaponShop"></div>
+        <div class="upgrade-tree" id="upgradeTree"></div>
+        <div class="forge-tree" id="forgeTree"></div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== МЕНЮ ==========
+            const menu = document.getElementById('mainMenu');
+            const gameWrapper = document.getElementById('gameWrapper');
+            const startBtn = document.getElementById('startGame');
+            const quitToMenuBtn = document.getElementById('quitToMenuBtn');
+            const resumeBtn = document.getElementById('resumeBtn');
+            const pauseMenu = document.getElementById('pauseMenu');
+            const gameoverMenu = document.getElementById('gameoverMenu');
+            const restartBtn = document.getElementById('restartBtn');
+            const gameoverToMenuBtn = document.getElementById('gameoverToMenuBtn');
+            
+            const gameoverWave = document.getElementById('gameoverWave');
+            const gameoverKills = document.getElementById('gameoverKills');
+            const gameoverGold = document.getElementById('gameoverGold');
+            
+            const chestCountSpan = document.getElementById('chestCount');
+
+            startBtn.addEventListener('click', () => {
+                menu.classList.add('hidden');
+                gameWrapper.classList.add('active');
+                resetGame();
+            });
+
+            quitToMenuBtn.addEventListener('click', () => {
+                pauseMenu.classList.remove('active');
+                menu.classList.remove('hidden');
+                gameWrapper.classList.remove('active');
+                gamePaused = false;
+            });
+
+            resumeBtn.addEventListener('click', () => {
+                pauseMenu.classList.remove('active');
+                gamePaused = false;
+            });
+            
+            restartBtn.addEventListener('click', () => {
+                gameoverMenu.classList.remove('active');
+                resetGame();
+            });
+            
+            gameoverToMenuBtn.addEventListener('click', () => {
+                gameoverMenu.classList.remove('active');
+                menu.classList.remove('hidden');
+                gameWrapper.classList.remove('active');
+            });
+
+            // ========== НАСТРОЙКИ ==========
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeValue = document.getElementById('volumeValue');
+            const sensitivitySlider = document.getElementById('sensitivitySlider');
+            const sensitivityValue = document.getElementById('sensitivityValue');
+            
+            let volume = 70;
+            let sensitivity = 100;
+            
+            volumeSlider.addEventListener('input', (e) => {
+                volume = e.target.value;
+                volumeValue.textContent = volume + '%';
+                
+                // Обновляем громкость всех звуков
+                Object.values(sounds).forEach(sound => {
+                    if (sound) sound.volume = volume / 100;
+                });
+            });
+            
+            sensitivitySlider.addEventListener('input', (e) => {
+                sensitivity = e.target.value;
+                sensitivityValue.textContent = sensitivity + '%';
+            });
+
+            // ========== КАНВАС ==========
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            const minimap = document.getElementById('minimap');
+            const minimapCanvas = document.getElementById('minimapCanvas');
+            const minimapCtx = minimapCanvas.getContext('2d');
+            const minimapToggle = document.getElementById('minimapToggle');
+            let minimapActive = false;
+            
+            minimapToggle.addEventListener('click', () => {
+                if (gamePaused) return;
+                minimapActive = !minimapActive;
+                if (minimapActive) {
+                    minimap.classList.add('active');
+                } else {
+                    minimap.classList.remove('active');
+                }
+            });
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // ========== ЗВУКИ ==========
+            const sounds = {
+                sword: document.getElementById('swordSound'),
+                hit: document.getElementById('hitSound'),
+                kill: document.getElementById('killSound'),
+                chest: document.getElementById('chestSound'),
+                buy: document.getElementById('buySound'),
+                levelUp: document.getElementById('levelUpSound'),
+                boss: document.getElementById('bossSound')
+            };
+            
+            // Создаем реальные звуки через Web Audio API
+            function initSounds() {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                
+                // Переопределяем звуки
+                sounds.sword = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1);
+                        gain.gain.setValueAtTime(0.1 * (volume/100), audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }
+                };
+                
+                sounds.hit = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                        gain.gain.setValueAtTime(0.15 * (volume/100), audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.1);
+                    }
+                };
+                
+                sounds.kill = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.2);
+                        gain.gain.setValueAtTime(0.2 * (volume/100), audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.3);
+                    }
+                };
+                
+                sounds.chest = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => {
+                                const osc = audioCtx.createOscillator();
+                                const gain = audioCtx.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioCtx.destination);
+                                osc.type = 'sine';
+                                osc.frequency.setValueAtTime(400 + i * 100, audioCtx.currentTime);
+                                gain.gain.setValueAtTime(0.1 * (volume/100), audioCtx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                                osc.start();
+                                osc.stop(audioCtx.currentTime + 0.1);
+                            }, i * 100);
+                        }
+                    }
+                };
+                
+                sounds.buy = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.type = 'square';
+                        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                        gain.gain.setValueAtTime(0.1 * (volume/100), audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }
+                };
+                
+                sounds.levelUp = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                const osc = audioCtx.createOscillator();
+                                const gain = audioCtx.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioCtx.destination);
+                                osc.type = 'sine';
+                                osc.frequency.setValueAtTime(300 + i * 100, audioCtx.currentTime);
+                                gain.gain.setValueAtTime(0.1 * (volume/100), audioCtx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                                osc.start();
+                                osc.stop(audioCtx.currentTime + 0.1);
+                            }, i * 100);
+                        }
+                    }
+                };
+                
+                sounds.boss = {
+                    play: function() {
+                        if (audioCtx.state === 'suspended') audioCtx.resume();
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => {
+                                const osc = audioCtx.createOscillator();
+                                const gain = audioCtx.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioCtx.destination);
+                                osc.type = 'sawtooth';
+                                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                                gain.gain.setValueAtTime(0.3 * (volume/100), audioCtx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                                osc.start();
+                                osc.stop(audioCtx.currentTime + 0.3);
+                            }, i * 200);
+                        }
+                    }
+                };
+            }
+            
+            initSounds();
+
+            // ========== МИР ==========
+            const WORLD_SIZE = 20000;
+            
+            // ========== ВОЛНЫ И БОССЫ ==========
+            let currentWave = 1;
+            let waveActive = false;
+            let waveTimer = 0;
+            const WAVE_DELAY = 180;
+            
+            let bossActive = false;
+            let bossEnemy = null;
+
+            // ========== 13 ВИДОВ ОРУЖИЯ ==========
+            const weapons = [
+                { id: 'dagger', name: 'Кинжал', damage: 5, range: 60, emoji: '🔪', price: 0, color: '#8e9cbd' },
+                { id: 'sword', name: 'Меч', damage: 10, range: 75, emoji: '🗡️', price: 100, color: '#6fa3d9' },
+                { id: 'axe', name: 'Топор', damage: 18, range: 70, emoji: '🪓', price: 250, color: '#b87c4b' },
+                { id: 'greatsword', name: 'Двуручник', damage: 28, range: 85, emoji: '⚔️', price: 500, color: '#b84b7c' },
+                { id: 'halberd', name: 'Алебарда', damage: 40, range: 110, emoji: '🔱', price: 800, color: '#b84b4b' },
+                { id: 'dragonSlayer', name: 'Драконобой', damage: 60, range: 130, emoji: '🐉🗡️', price: 1200, color: '#ff6b6b' },
+                { id: 'voidBlade', name: 'Клинок Бездны', damage: 85, range: 150, emoji: '🌑🗡️', price: 1800, color: '#8a6dff' },
+                { id: 'godSlayer', name: 'Богорез', damage: 120, range: 180, emoji: '⚡🗡️', price: 2500, color: '#ffd966' },
+                { id: 'crystalSword', name: 'Кристальный меч', damage: 150, range: 160, emoji: '🔮🗡️', price: 3500, color: '#6fff8f' },
+                { id: 'thunderHammer', name: 'Громовой молот', damage: 200, range: 120, emoji: '🔨⚡', price: 5000, color: '#ffd966' },
+                { id: 'shadowBlade', name: 'Клинок тени', damage: 180, range: 200, emoji: '🌑🔪', price: 4500, color: '#9f6fff' },
+                { id: 'infernoSword', name: 'Инфернальный клинок', damage: 250, range: 170, emoji: '🔥🗡️', price: 7000, color: '#ff8c4f' },
+                { id: 'celestialBow', name: 'Небесный лук', damage: 300, range: 250, emoji: '🏹✨', price: 10000, color: '#ffd700' }
+            ];
+            
+            let currentWeaponIndex = 0;
+
+            // ========== ЗАЧАРОВАНИЯ ==========
+            const enchantments = {
+                piercing: {
+                    name: 'Пронзание',
+                    emoji: '⚡',
+                    color: '#ffd966',
+                    levels: [
+                        { level: 1, chance: 20, multiplier: 1.5, cost: 200, desc: '20% шанс пронзить (х1.5 урона)' },
+                        { level: 2, chance: 35, multiplier: 2.0, cost: 400, desc: '35% шанс пронзить (х2 урона)' },
+                        { level: 3, chance: 50, multiplier: 2.5, cost: 800, desc: '50% шанс пронзить (х2.5 урона)' }
+                    ]
+                },
+                fire: {
+                    name: 'Огонь',
+                    emoji: '🔥',
+                    color: '#ff6b4f',
+                    levels: [
+                        { level: 1, chance: 25, damage: 3, duration: 3, cost: 200, desc: '25% шанс поджечь (3 урона/сек)' },
+                        { level: 2, chance: 40, damage: 5, duration: 4, cost: 400, desc: '40% шанс поджечь (5 урона/сек)' },
+                        { level: 3, chance: 55, damage: 8, duration: 5, cost: 700, desc: '55% шанс поджечь (8 урона/сек)' }
+                    ]
+                },
+                poison: {
+                    name: 'Яд',
+                    emoji: '☠️',
+                    color: '#6fbf4f',
+                    levels: [
+                        { level: 1, chance: 30, damage: 2, duration: 4, cost: 180, desc: '30% шанс отравить (2 урона/сек)' },
+                        { level: 2, chance: 45, damage: 4, duration: 5, cost: 350, desc: '45% шанс отравить (4 урона/сек)' },
+                        { level: 3, chance: 60, damage: 6, duration: 6, cost: 600, desc: '60% шанс отравить (6 урона/сек)' }
+                    ]
+                }
+            };
+
+            let currentEnchantments = {
+                piercing: 0,
+                fire: 0,
+                poison: 0
+            };
+
+            let activeEffects = [];
+
+            // ========== СУНДУКИ ==========
+            let chests = [];
+            
+            const chestTypes = {
+                common: { 
+                    name: 'Обычный сундук', 
+                    emoji: '📦', 
+                    color: '#8b8b8b',
+                    rarity: 0.7,
+                    gold: { min: 15, max: 35 }, // Целые числа
+                    upgrades: ['health', 'damage', 'gold']
+                },
+                rare: { 
+                    name: 'Редкий сундук', 
+                    emoji: '🎁', 
+                    color: '#4a7dff',
+                    rarity: 0.25,
+                    gold: { min: 40, max: 80 },
+                    upgrades: ['health', 'damage', 'shield', 'gold', 'speed']
+                },
+                epic: { 
+                    name: 'Эпический сундук', 
+                    emoji: '👑', 
+                    color: '#b84bff',
+                    rarity: 0.05,
+                    gold: { min: 100, max: 250 },
+                    upgrades: ['health', 'damage', 'shield', 'gold', 'speed', 'crit', 'vamp', 'explosion']
+                }
+            };
+
+            // Таймер спавна сундуков - 30 секунд (60fps * 30)
+            let chestSpawnTimer = 0;
+            const CHEST_SPAWN_INTERVAL = 1800; // 30 секунд
+            const MAX_CHESTS = 4;
+
+            // ========== СООБЩЕНИЯ ТОЛЬКО ДЛЯ СУНДУКОВ ==========
+            const messageArea = document.getElementById('messageArea');
+
+            function showChestMessage(text, color = '#ffd966') {
+                const msg = document.createElement('div');
+                msg.className = 'chest-message';
+                msg.style.color = color;
+                msg.textContent = text;
+                messageArea.appendChild(msg);
+                
+                setTimeout(() => {
+                    msg.remove();
+                }, 2000);
+            }
+
+            function openChest(chest) {
+                if (chest.opened) return;
+                
+                chest.opened = true;
+                
+                // Звук открытия сундука
+                if (sounds.chest) sounds.chest.play();
+                
+                const rewards = [];
+                
+                // Целое число золота
+                const goldValue = Math.floor(chest.gold.min + Math.random() * (chest.gold.max - chest.gold.min)) * goldMultiplier;
+                rewards.push({ type: 'gold', value: goldValue, text: `💰 +${goldValue}`, color: '#ffd966', weight: 60 });
+                
+                chest.upgrades.forEach(key => {
+                    const upgrade = upgrades[key];
+                    let maxLevel = 1;
+                    if (chest.type === 'rare') maxLevel = 3;
+                    if (chest.type === 'epic') maxLevel = 10;
+                    
+                    const availableLevels = upgrade.levels.filter(l => l.level <= maxLevel);
+                    if (availableLevels.length > 0) {
+                        const level = availableLevels[Math.floor(Math.random() * availableLevels.length)];
+                        rewards.push({ 
+                            type: 'upgrade', 
+                            upgradeKey: key, 
+                            level: level,
+                            text: `${upgrade.name.split(' ')[0]} ${level.effect}`,
+                            color: '#c56bff',
+                            weight: 40 / chest.upgrades.length
+                        });
+                    }
+                });
+                
+                const totalWeight = rewards.reduce((sum, r) => sum + r.weight, 0);
+                let rand = Math.random() * totalWeight;
+                let selectedReward = rewards[0];
+                
+                for (const reward of rewards) {
+                    if (rand < reward.weight) {
+                        selectedReward = reward;
+                        break;
+                    }
+                    rand -= reward.weight;
+                }
+                
+                if (selectedReward.type === 'gold') {
+                    player.gold += selectedReward.value;
+                } else {
+                    applyUpgrade(selectedReward.upgradeKey, selectedReward.level);
+                }
+                
+                // ТОЛЬКО СООБЩЕНИЕ ОТ СУНДУКА
+                showChestMessage(selectedReward.text, selectedReward.color);
+                
+                const index = chests.indexOf(chest);
+                if (index > -1) {
+                    chests.splice(index, 1);
+                }
+                
+                updateChestCounter();
+            }
+
+            function spawnChest() {
+                if (gameOver) return;
+                if (chests.length >= MAX_CHESTS) return;
+                
+                const rand = Math.random();
+                let type;
+                if (rand < chestTypes.common.rarity) type = 'common';
+                else if (rand < chestTypes.common.rarity + chestTypes.rare.rarity) type = 'rare';
+                else type = 'epic';
+                
+                const chestType = chestTypes[type];
+                
+                const x = player.x + (Math.random() - 0.5) * 2000;
+                const y = player.y + (Math.random() - 0.5) * 2000;
+                
+                const spawnX = Math.max(100, Math.min(WORLD_SIZE - 100, x));
+                const spawnY = Math.max(100, Math.min(WORLD_SIZE - 100, y));
+                
+                chests.push({
+                    x: spawnX,
+                    y: spawnY,
+                    type: type,
+                    ...chestType,
+                    opened: false,
+                    id: Math.random()
+                });
+                
+                updateChestCounter();
+            }
+            
+            function updateChestCounter() {
+                chestCountSpan.textContent = chests.length;
+            }
+
+            function applyUpgrade(key, level) {
+                // Звук улучшения
+                if (sounds.levelUp) sounds.levelUp.play();
+                
+                switch(key) {
+                    case 'health':
+                        bonusMaxHp += level.value;
+                        player.maxHp += level.value;
+                        player.hp += level.value;
+                        upgrades.health.currentLevel = Math.max(upgrades.health.currentLevel, level.level);
+                        break;
+                    case 'damage':
+                        bonusDamage += level.value;
+                        upgrades.damage.currentLevel = Math.max(upgrades.damage.currentLevel, level.level);
+                        break;
+                    case 'shield':
+                        blockChance = level.value / 100;
+                        upgrades.shield.currentLevel = Math.max(upgrades.shield.currentLevel, level.level);
+                        break;
+                    case 'gold':
+                        goldMultiplier = 1 + (level.value / 100);
+                        upgrades.gold.currentLevel = Math.max(upgrades.gold.currentLevel, level.level);
+                        break;
+                    case 'speed':
+                        speedMultiplier = 1 + (level.value / 100);
+                        player.speed = 5 * speedMultiplier;
+                        player.runSpeed = 9 * speedMultiplier;
+                        upgrades.speed.currentLevel = Math.max(upgrades.speed.currentLevel, level.level);
+                        break;
+                    case 'crit':
+                        critChance = level.value / 100;
+                        if (level.mult) critMultiplier = level.mult;
+                        upgrades.crit.currentLevel = Math.max(upgrades.crit.currentLevel, level.level);
+                        break;
+                    case 'vamp':
+                        vampChance = level.value / 100;
+                        upgrades.vamp.currentLevel = Math.max(upgrades.vamp.currentLevel, level.level);
+                        break;
+                    case 'explosion':
+                        explosionChance = level.value / 100;
+                        upgrades.explosion.currentLevel = Math.max(upgrades.explosion.currentLevel, level.level);
+                        break;
+                }
+                
+                updateUpgradeTree();
+            }
+
+            // ========== УЛУЧШЕНИЯ ==========
+            const upgrades = {
+                health: {
+                    name: '❤️ Здоровье',
+                    levels: [
+                        { level: 1, effect: '+20 HP', desc: 'Увеличивает здоровье', value: 20, cost: 80 },
+                        { level: 2, effect: '+25 HP', desc: 'Еще больше здоровья', value: 25, cost: 130 },
+                        { level: 3, effect: '+30 HP', desc: 'Крепкое здоровье', value: 30, cost: 190 },
+                        { level: 4, effect: '+40 HP', desc: 'Здоров как бык', value: 40, cost: 260 },
+                        { level: 5, effect: '+50 HP', desc: 'Выносливость', value: 50, cost: 340 },
+                        { level: 6, effect: '+60 HP', desc: 'Живучесть', value: 60, cost: 430 },
+                        { level: 7, effect: '+75 HP', desc: 'Крепыш', value: 75, cost: 530 },
+                        { level: 8, effect: '+90 HP', desc: 'Гора мышц', value: 90, cost: 640 },
+                        { level: 9, effect: '+110 HP', desc: 'Титан', value: 110, cost: 760 },
+                        { level: 10, effect: '+150 HP', desc: 'Бессмертный', value: 150, cost: 900 }
+                    ],
+                    currentLevel: 0
+                },
+                damage: {
+                    name: '⚔️ Урон',
+                    levels: [
+                        { level: 1, effect: '+3 урона', desc: 'Острее клинок', value: 3, cost: 90 },
+                        { level: 2, effect: '+4 урона', desc: 'Сила растет', value: 4, cost: 150 },
+                        { level: 3, effect: '+5 урона', desc: 'Мощный удар', value: 5, cost: 220 },
+                        { level: 4, effect: '+7 урона', desc: 'Сокрушитель', value: 7, cost: 300 },
+                        { level: 5, effect: '+9 урона', desc: 'Разрушитель', value: 9, cost: 390 },
+                        { level: 6, effect: '+12 урона', desc: 'Кошмар врагов', value: 12, cost: 490 },
+                        { level: 7, effect: '+15 урона', desc: 'Легенда', value: 15, cost: 600 },
+                        { level: 8, effect: '+18 урона', desc: 'Мифический', value: 18, cost: 720 },
+                        { level: 9, effect: '+22 урона', desc: 'Божественный', value: 22, cost: 850 },
+                        { level: 10, effect: '+30 урона', desc: 'Всемогущий', value: 30, cost: 1000 }
+                    ],
+                    currentLevel: 0
+                },
+                shield: {
+                    name: '🛡️ Щит',
+                    levels: [
+                        { level: 1, effect: 'Блок 5%', desc: 'Шанс заблокировать', value: 5, cost: 85 },
+                        { level: 2, effect: 'Блок 8%', desc: 'Укрепление', value: 8, cost: 140 },
+                        { level: 3, effect: 'Блок 12%', desc: 'Стена', value: 12, cost: 210 },
+                        { level: 4, effect: 'Блок 16%', desc: 'Крепость', value: 16, cost: 290 },
+                        { level: 5, effect: 'Блок 21%', desc: 'Нерушимый', value: 21, cost: 380 },
+                        { level: 6, effect: 'Блок 27%', desc: 'Адамантит', value: 27, cost: 480 },
+                        { level: 7, effect: 'Блок 34%', desc: 'Бастион', value: 34, cost: 590 },
+                        { level: 8, effect: 'Блок 42%', desc: 'Неприступный', value: 42, cost: 710 },
+                        { level: 9, effect: 'Блок 51%', desc: 'Абсолютный', value: 51, cost: 840 },
+                        { level: 10, effect: 'Блок 65%', desc: 'Божественная защита', value: 65, cost: 1000 }
+                    ],
+                    currentLevel: 0
+                },
+                gold: {
+                    name: '💰 Золото',
+                    levels: [
+                        { level: 1, effect: '+8% монет', desc: 'Больше золота', value: 8, cost: 95 },
+                        { level: 2, effect: '+12% монет', desc: 'Золотая жила', value: 12, cost: 160 },
+                        { level: 3, effect: '+16% монет', desc: 'Алчность', value: 16, cost: 240 },
+                        { level: 4, effect: '+20% монет', desc: 'Богатство', value: 20, cost: 330 },
+                        { level: 5, effect: '+24% монет', desc: 'Золотой дракон', value: 24, cost: 430 },
+                        { level: 6, effect: '+28% монет', desc: 'Магнат', value: 28, cost: 540 },
+                        { level: 7, effect: '+32% монет', desc: 'Миллионер', value: 32, cost: 660 },
+                        { level: 8, effect: '+36% монет', desc: 'Крез', value: 36, cost: 790 },
+                        { level: 9, effect: '+40% монет', desc: 'Нептун золота', value: 40, cost: 930 },
+                        { level: 10, effect: '+45% монет', desc: 'Золотой трон', value: 45, cost: 1100 }
+                    ],
+                    currentLevel: 0
+                },
+                speed: {
+                    name: '⚡ Скорость',
+                    levels: [
+                        { level: 1, effect: '+5% скорости', desc: 'Быстрее ветра', value: 5, cost: 90 },
+                        { level: 2, effect: '+8% скорости', desc: 'Ускорение', value: 8, cost: 150 },
+                        { level: 3, effect: '+12% скорости', desc: 'Вихрь', value: 12, cost: 220 },
+                        { level: 4, effect: '+16% скорости', desc: 'Молния', value: 16, cost: 300 },
+                        { level: 5, effect: '+21% скорости', desc: 'Сверхзвук', value: 21, cost: 390 },
+                        { level: 6, effect: '+27% скорости', desc: 'Телепортация', value: 27, cost: 490 },
+                        { level: 7, effect: '+34% скорости', desc: 'Невидимка', value: 34, cost: 600 },
+                        { level: 8, effect: '+42% скорости', desc: 'Фантом', value: 42, cost: 720 },
+                        { level: 9, effect: '+51% скорости', desc: 'Вспышка', value: 51, cost: 850 },
+                        { level: 10, effect: '+65% скорости', desc: 'Божественная скорость', value: 65, cost: 1000 }
+                    ],
+                    currentLevel: 0
+                },
+                crit: {
+                    name: '🎯 Крит',
+                    levels: [
+                        { level: 1, effect: 'Крит 4% х2', desc: 'Шанс двойного урона', value: 4, cost: 100 },
+                        { level: 2, effect: 'Крит 7% х2', desc: 'Меткий удар', value: 7, cost: 170 },
+                        { level: 3, effect: 'Крит 10% х2', desc: 'Точность', value: 10, cost: 250 },
+                        { level: 4, effect: 'Крит 14% х2', desc: 'Острый глаз', value: 14, cost: 340 },
+                        { level: 5, effect: 'Крит 18% х2', desc: 'Мастер удара', value: 18, cost: 440 },
+                        { level: 6, effect: 'Крит 23% х2.5', desc: 'Критический разряд', value: 23, cost: 550, mult: 2.5 },
+                        { level: 7, effect: 'Крит 28% х2.5', desc: 'Смертельный', value: 28, cost: 670, mult: 2.5 },
+                        { level: 8, effect: 'Крит 34% х3', desc: 'Сокрушительный', value: 34, cost: 800, mult: 3 },
+                        { level: 9, effect: 'Крит 40% х3', desc: 'Абсолютный крит', value: 40, cost: 940, mult: 3 },
+                        { level: 10, effect: 'Крит 48% х4', desc: 'Божественный крит', value: 48, cost: 1100, mult: 4 }
+                    ],
+                    currentLevel: 0
+                },
+                vamp: {
+                    name: '🧛 Вампиризм',
+                    levels: [
+                        { level: 1, effect: 'Вампиризм 2%', desc: 'Восстанавливает HP', value: 2, cost: 110 },
+                        { level: 2, effect: 'Вампиризм 4%', desc: 'Кровопийца', value: 4, cost: 190 },
+                        { level: 3, effect: 'Вампиризм 6%', desc: 'Жажда крови', value: 6, cost: 280 },
+                        { level: 4, effect: 'Вампиризм 8%', desc: 'Темный ритуал', value: 8, cost: 380 },
+                        { level: 5, effect: 'Вампиризм 10%', desc: 'Кровавая жатва', value: 10, cost: 490 },
+                        { level: 6, effect: 'Вампиризм 12%', desc: 'Повелитель крови', value: 12, cost: 610 },
+                        { level: 7, effect: 'Вампиризм 15%', desc: 'Кровавый вампир', value: 15, cost: 740 },
+                        { level: 8, effect: 'Вампиризм 18%', desc: 'Носферату', value: 18, cost: 880 },
+                        { level: 9, effect: 'Вампиризм 22%', desc: 'Дракула', value: 22, cost: 1030 },
+                        { level: 10, effect: 'Вампиризм 27%', desc: 'Бог крови', value: 27, cost: 1200 }
+                    ],
+                    currentLevel: 0
+                },
+                explosion: {
+                    name: '💥 Взрыв',
+                    levels: [
+                        { level: 1, effect: 'Взрыв 8%', desc: 'Шанс взрыва', value: 8, cost: 120 },
+                        { level: 2, effect: 'Взрыв 12%', desc: 'Цепная реакция', value: 12, cost: 210 },
+                        { level: 3, effect: 'Взрыв 16%', desc: 'Фейерверк', value: 16, cost: 310 },
+                        { level: 4, effect: 'Взрыв 20%', desc: 'Пиромания', value: 20, cost: 420 },
+                        { level: 5, effect: 'Взрыв 24%', desc: 'Адское пламя', value: 24, cost: 540 },
+                        { level: 6, effect: 'Взрыв 28%', desc: 'Ядерный взрыв', value: 28, cost: 670 },
+                        { level: 7, effect: 'Взрыв 32%', desc: 'Сверхновая', value: 32, cost: 810 },
+                        { level: 8, effect: 'Взрыв 36%', desc: 'Разрушение миров', value: 36, cost: 960 },
+                        { level: 9, effect: 'Взрыв 40%', desc: 'Апокалипсис', value: 40, cost: 1120 },
+                        { level: 10, effect: 'Взрыв 45%', desc: 'Божественный взрыв', value: 45, cost: 1300 }
+                    ],
+                    currentLevel: 0
+                }
+            };
+
+            // Бонусы
+            let bonusMaxHp = 0;
+            let bonusDamage = 0;
+            let blockChance = 0;
+            let goldMultiplier = 1.0;
+            let speedMultiplier = 1.0;
+            let critChance = 0;
+            let critMultiplier = 2.0;
+            let vampChance = 0;
+            let explosionChance = 0;
+
+            // ========== ИГРОК ==========
+            let player = {
+                x: WORLD_SIZE/2, y: WORLD_SIZE/2,
+                hp: 100, maxHp: 100,
+                baseDamage: weapons[0].damage,
+                attackRange: weapons[0].range,
+                defense: 2,
+                speed: 5,
+                runSpeed: 9,
+                gold: 150,
+                kills: 0
+            };
+
+            // ========== ОБЪЕКТЫ ==========
+            let enemies = [];
+            let coins = [];
+
+            // ========== ФЛАГИ ==========
+            let gameOver = false;
+            let gamePaused = false;
+            let invincibleFrames = 0;
+            
+            let isAttacking = false;
+            let attackFrame = 0;
+            let attackWorldX = 0, attackWorldY = 0;
+
+            let shopOpen = false;
+            let upgradeOpen = false;
+            let forgeOpen = false;
+
+            // ========== УПРАВЛЕНИЕ ==========
+            const keys = {
+                w: false, a: false, s: false, d: false,
+                shift: false
+            };
+            
+            let mouseX = 0, mouseY = 0;
+            let mousePressed = false;
+            
+            let cameraX = 0, cameraY = 0;
+
+            // ========== КНОПКИ ==========
+            const shopToggle = document.getElementById('shopToggle');
+            const weaponShop = document.getElementById('weaponShop');
+            const upgradeToggle = document.getElementById('upgradeToggle');
+            const upgradeTree = document.getElementById('upgradeTree');
+            const forgeToggle = document.getElementById('forgeToggle');
+            const forgeTree = document.getElementById('forgeTree');
+
+            shopToggle.addEventListener('click', () => {
+                if (gameOver || gamePaused) return;
+                shopOpen = !shopOpen;
+                upgradeOpen = false;
+                forgeOpen = false;
+                if (shopOpen) {
+                    weaponShop.classList.add('open');
+                    upgradeTree.classList.remove('open');
+                    forgeTree.classList.remove('open');
+                } else {
+                    weaponShop.classList.remove('open');
+                }
+            });
+
+            upgradeToggle.addEventListener('click', () => {
+                if (gameOver || gamePaused) return;
+                upgradeOpen = !upgradeOpen;
+                shopOpen = false;
+                forgeOpen = false;
+                if (upgradeOpen) {
+                    upgradeTree.classList.add('open');
+                    updateUpgradeTree();
+                    weaponShop.classList.remove('open');
+                    forgeTree.classList.remove('open');
+                } else {
+                    upgradeTree.classList.remove('open');
+                }
+            });
+
+            forgeToggle.addEventListener('click', () => {
+                if (gameOver || gamePaused) return;
+                forgeOpen = !forgeOpen;
+                shopOpen = false;
+                upgradeOpen = false;
+                if (forgeOpen) {
+                    forgeTree.classList.add('open');
+                    updateForge();
+                    weaponShop.classList.remove('open');
+                    upgradeTree.classList.remove('open');
+                } else {
+                    forgeTree.classList.remove('open');
+                }
+            });
+
+            // ========== КУЗНИЦА ==========
+            function updateForge() {
+                forgeTree.innerHTML = '';
+                
+                const weaponCard = document.createElement('div');
+                weaponCard.className = 'forge-card';
+                weaponCard.innerHTML = `
+                    <div class="forge-title">⚔️ ТЕКУЩЕЕ ОРУЖИЕ</div>
+                    <div style="font-size: 4rem; margin: 20px 0;">${weapons[currentWeaponIndex].emoji}</div>
+                    <div style="font-size: 2rem; color: #ffd9a3;">${weapons[currentWeaponIndex].name}</div>
+                    <div style="font-size: 1.6rem; color: #ffb56b; margin-top: 10px;">Урон: ${weapons[currentWeaponIndex].damage + bonusDamage}</div>
+                `;
+                forgeTree.appendChild(weaponCard);
+                
+                Object.keys(enchantments).forEach(key => {
+                    const ench = enchantments[key];
+                    const currentLevel = currentEnchantments[key];
+                    const nextLevel = currentLevel < 3 ? ench.levels[currentLevel] : null;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'forge-card';
+                    
+                    let enchantHtml = `
+                        <div class="forge-title">${ench.emoji} ${ench.name}</div>
+                    `;
+                    
+                    if (currentLevel > 0) {
+                        const level = ench.levels[currentLevel - 1];
+                        enchantHtml += `
+                            <div class="enchant-slot">
+                                <div class="current-enchant">Текущий уровень ${currentLevel}</div>
+                                <div class="enchant-desc">${level.desc}</div>
+                            </div>
+                        `;
+                    } else {
+                        enchantHtml += `
+                            <div class="enchant-slot">
+                                <div class="current-enchant">Нет зачарования</div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (nextLevel) {
+                        enchantHtml += `
+                            <button class="enchant-btn" id="enchant-${key}" ${player.gold < nextLevel.cost ? 'disabled' : ''}>
+                                Улучшить до ${currentLevel + 1} ур.
+                            </button>
+                            <div class="enchant-cost">💰 ${nextLevel.cost}</div>
+                            <div class="enchant-desc">${nextLevel.desc}</div>
+                        `;
+                    } else {
+                        enchantHtml += `
+                            <div style="font-size: 1.6rem; color: #ffd966; margin-top: 20px;">МАКСИМАЛЬНЫЙ УРОВЕНЬ</div>
+                        `;
+                    }
+                    
+                    card.innerHTML = enchantHtml;
+                    forgeTree.appendChild(card);
+                });
+                
+                Object.keys(enchantments).forEach(key => {
+                    const btn = document.getElementById(`enchant-${key}`);
+                    if (btn) {
+                        btn.addEventListener('click', () => {
+                            const currentLevel = currentEnchantments[key];
+                            if (currentLevel < 3) {
+                                const nextLevel = enchantments[key].levels[currentLevel];
+                                if (player.gold >= nextLevel.cost) {
+                                    player.gold -= nextLevel.cost;
+                                    currentEnchantments[key] = currentLevel + 1;
+                                    updateForge();
+                                    updateUI();
+                                    // БЕЗ СООБЩЕНИЯ
+                                    if (sounds.levelUp) sounds.levelUp.play();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
+            // ========== ОБНОВЛЕНИЕ ДЕРЕВА ==========
+            function updateUpgradeTree() {
+                upgradeTree.innerHTML = '';
+                
+                Object.keys(upgrades).forEach(key => {
+                    const cat = upgrades[key];
+                    const category = document.createElement('div');
+                    category.className = 'upgrade-category';
+                    
+                    category.innerHTML = `
+                        <div class="upgrade-header">
+                            <span>${cat.name}</span>
+                        </div>
+                        <div class="upgrade-levels" id="upgrade-${key}">
+                        </div>
+                    `;
+                    
+                    upgradeTree.appendChild(category);
+                    
+                    const levelsContainer = document.getElementById(`upgrade-${key}`);
+                    
+                    cat.levels.forEach((level, index) => {
+                        const levelNum = index + 1;
+                        const isAvailable = levelNum === cat.currentLevel + 1;
+                        const isMaxed = cat.currentLevel >= cat.levels.length;
+                        
+                        const item = document.createElement('div');
+                        item.className = `upgrade-item ${!isAvailable || isMaxed ? 'maxed' : ''}`;
+                        
+                        if (isAvailable && !isMaxed && player.gold >= level.cost) {
+                            item.style.cursor = 'pointer';
+                        }
+                        
+                        item.innerHTML = `
+                            <div class="upgrade-info">
+                                <span class="upgrade-level">УРОВЕНЬ ${level.level}</span>
+                                <span class="upgrade-effect">${level.effect}</span>
+                                <span class="upgrade-desc">${level.desc}</span>
+                            </div>
+                            <div class="upgrade-cost">💰 ${level.cost}</div>
+                        `;
+                        
+                        if (isAvailable && !isMaxed) {
+                            item.addEventListener('click', () => {
+                                if (player.gold >= level.cost) {
+                                    player.gold -= level.cost;
+                                    applyUpgrade(key, level);
+                                    updateUI();
+                                    updateUpgradeTree();
+                                    // БЕЗ СООБЩЕНИЯ
+                                }
+                            });
+                        }
+                        
+                        levelsContainer.appendChild(item);
+                    });
+                });
+            }
+
+            // ========== МАГАЗИН ==========
+            function createWeaponShop() {
+                weaponShop.innerHTML = '';
+                
+                weapons.forEach((weapon, index) => {
+                    const card = document.createElement('div');
+                    card.className = `weapon-card ${index === 0 ? 'selected' : ''}`;
+                    card.id = `weapon-${weapon.id}`;
+                    card.innerHTML = `
+                        <span class="weapon-emoji">${weapon.emoji}</span>
+                        <span class="weapon-name">${weapon.name}</span>
+                        <span class="weapon-damage">⚔️ ${weapon.damage}</span>
+                        <span class="weapon-range">📏 ${weapon.range}</span>
+                        <span class="weapon-price">💰 ${weapon.price}</span>
+                    `;
+                    
+                    card.addEventListener('click', () => {
+                        if (gameOver || gamePaused) return;
+                        
+                        if (index === 0) {
+                            currentWeaponIndex = 0;
+                            currentEnchantments = { piercing: 0, fire: 0, poison: 0 };
+                            updateWeaponSelection();
+                            // БЕЗ СООБЩЕНИЯ
+                        } else {
+                            if (player.gold >= weapon.price) {
+                                player.gold -= weapon.price;
+                                currentWeaponIndex = index;
+                                currentEnchantments = { piercing: 0, fire: 0, poison: 0 };
+                                updateWeaponSelection();
+                                updateUI();
+                                // БЕЗ СООБЩЕНИЯ
+                                if (sounds.buy) sounds.buy.play();
+                            } else {
+                                // БЕЗ СООБЩЕНИЯ
+                            }
+                        }
+                    });
+                    
+                    weaponShop.appendChild(card);
+                });
+            }
+
+            function updateWeaponSelection() {
+                document.querySelectorAll('.weapon-card').forEach((card, index) => {
+                    if (index === currentWeaponIndex) {
+                        card.classList.add('selected');
+                    } else {
+                        card.classList.remove('selected');
+                    }
+                });
+                player.baseDamage = weapons[currentWeaponIndex].damage + bonusDamage;
+                player.attackRange = weapons[currentWeaponIndex].range;
+            }
+
+            // ========== БОССЫ ==========
+            function spawnBoss() {
+                bossActive = true;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 500;
+                
+                const x = player.x + Math.cos(angle) * distance;
+                const y = player.y + Math.sin(angle) * distance;
+                
+                const bossNumber = Math.floor(currentWave / 10);
+                
+                const baseHp = 400;
+                const baseAttack = 20;
+                const baseReward = 150;
+                
+                const difficultyMult = Math.pow(1.5, bossNumber - 1);
+                
+                const bossHp = Math.floor(baseHp * difficultyMult * (1 + bossNumber * 0.3));
+                const bossAttack = Math.floor(baseAttack * difficultyMult * (1 + bossNumber * 0.2));
+                const bossReward = Math.floor(baseReward * difficultyMult * (1 + bossNumber * 0.5));
+                
+                const colors = ['#8a2be2', '#b84bff', '#ff4b8a', '#ff1f4f', '#ff0000'];
+                const bossColor = colors[Math.min(bossNumber - 1, colors.length - 1)];
+                
+                bossEnemy = {
+                    x, y,
+                    hp: bossHp,
+                    maxHp: bossHp,
+                    attack: bossAttack,
+                    color: bossColor,
+                    size: 70 + bossNumber * 5,
+                    speed: 0.4,
+                    reward: bossReward,
+                    isBoss: true,
+                    bossNumber: bossNumber
+                };
+                
+                enemies.push(bossEnemy);
+                
+                // Звук босса
+                if (sounds.boss) sounds.boss.play();
+                
+                // ТОЛЬКО СООБЩЕНИЕ О БОССЕ (важное)
+                showChestMessage(`👑 БОСС ${bossNumber}`, '#ff4f4f');
+                updateWaveDisplay();
+            }
+
+            // ========== ВОЛНЫ ==========
+            function startNextWave() {
+                if (gameOver || gamePaused) return;
+                
+                if (currentWave % 10 === 0) {
+                    spawnBoss();
+                    waveActive = true;
+                    return;
+                }
+                
+                waveActive = true;
+                
+                const baseEnemies = 4;
+                const waveMultiplier = 1 + (currentWave * 0.3);
+                const waveSize = Math.floor(baseEnemies * waveMultiplier);
+                
+                // БЕЗ СООБЩЕНИЯ О ВОЛНЕ
+                
+                for (let i = 0; i < waveSize; i++) {
+                    setTimeout(() => {
+                        if (gameOver || gamePaused) return;
+                        spawnWaveEnemy();
+                    }, i * 300);
+                }
+                
+                updateWaveDisplay();
+            }
+
+            function spawnWaveEnemy() {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 700 + Math.random() * 400;
+                
+                const x = player.x + Math.cos(angle) * distance;
+                const y = player.y + Math.sin(angle) * distance;
+                
+                const spawnX = Math.max(100, Math.min(WORLD_SIZE - 100, x));
+                const spawnY = Math.max(100, Math.min(WORLD_SIZE - 100, y));
+                
+                const wavePower = currentWave / 5;
+                
+                let hp, attack, color, size, reward;
+                
+                if (wavePower < 1) {
+                    hp = 20 + Math.floor(Math.random() * 20) + currentWave * 3;
+                    attack = 5 + Math.floor(Math.random() * 5) + Math.floor(currentWave * 1.5);
+                    color = '#c44f4f';
+                    size = 26;
+                    reward = Math.floor((4 + Math.random() * 6 + currentWave * 1.5) * goldMultiplier);
+                } else if (wavePower < 2) {
+                    hp = 50 + Math.floor(Math.random() * 30) + currentWave * 4;
+                    attack = 12 + Math.floor(Math.random() * 8) + Math.floor(currentWave * 2);
+                    color = '#b45fc4';
+                    size = 32;
+                    reward = Math.floor((10 + Math.random() * 10 + currentWave * 2) * goldMultiplier);
+                } else if (wavePower < 3) {
+                    hp = 90 + Math.floor(Math.random() * 40) + currentWave * 5;
+                    attack = 22 + Math.floor(Math.random() * 10) + Math.floor(currentWave * 2.5);
+                    color = '#d46f4f';
+                    size = 38;
+                    reward = Math.floor((20 + Math.random() * 12 + currentWave * 3) * goldMultiplier);
+                } else {
+                    hp = 150 + Math.floor(Math.random() * 50) + currentWave * 6;
+                    attack = 35 + Math.floor(Math.random() * 12) + Math.floor(currentWave * 3);
+                    color = '#d43f8f';
+                    size = 45;
+                    reward = Math.floor((35 + Math.random() * 15 + currentWave * 4) * goldMultiplier);
+                }
+
+                enemies.push({
+                    x: spawnX, y: spawnY, hp, maxHp: hp, attack, color, size,
+                    speed: 0.8 + Math.random() * 1.2,
+                    reward
+                });
+            }
+
+            function checkWaveComplete() {
+                if (waveActive && enemies.length === 0) {
+                    waveActive = false;
+                    
+                    if (bossActive) {
+                        bossActive = false;
+                        bossEnemy = null;
+                        player.gold += Math.floor(300 * goldMultiplier);
+                        const epicChest = {
+                            ...chestTypes.epic,
+                            x: player.x,
+                            y: player.y,
+                            opened: false
+                        };
+                        chests.push(epicChest);
+                        updateChestCounter();
+                        // БЕЗ СООБЩЕНИЯ
+                    }
+                    
+                    waveTimer = WAVE_DELAY;
+                    currentWave++;
+                    
+                    updateWaveDisplay();
+                    
+                    if (!bossActive) {
+                        player.gold += Math.floor((15 + currentWave * 8) * goldMultiplier);
+                    }
+                }
+            }
+
+            function updateWaveDisplay() {
+                if (bossActive && bossEnemy) {
+                    document.getElementById('waveDisplay').innerHTML = `<span class="boss-info">👑 БОСС ${bossEnemy.bossNumber} 👑</span>`;
+                } else {
+                    document.getElementById('waveDisplay').innerHTML = `🌊 ВОЛНА ${currentWave}`;
+                }
+            }
+
+            // ========== МИНИ-КАРТА ==========
+            function drawMinimap() {
+                if (!minimapActive) return;
+                
+                minimapCtx.clearRect(0, 0, 250, 250);
+                
+                minimapCtx.fillStyle = '#1a1f2a';
+                minimapCtx.fillRect(0, 0, 250, 250);
+                
+                const scale = 200 / WORLD_SIZE;
+                
+                minimapCtx.fillStyle = '#3a8fe0';
+                minimapCtx.beginPath();
+                minimapCtx.arc(player.x * scale + 25, player.y * scale + 25, 5, 0, Math.PI*2);
+                minimapCtx.fill();
+                
+                enemies.forEach(e => {
+                    if (e.isBoss) {
+                        minimapCtx.fillStyle = '#ff4f4f';
+                        minimapCtx.beginPath();
+                        minimapCtx.arc(e.x * scale + 25, e.y * scale + 25, 4, 0, Math.PI*2);
+                        minimapCtx.fill();
+                    } else {
+                        minimapCtx.fillStyle = '#b84b4b';
+                        minimapCtx.beginPath();
+                        minimapCtx.arc(e.x * scale + 25, e.y * scale + 25, 2, 0, Math.PI*2);
+                        minimapCtx.fill();
+                    }
+                });
+                
+                chests.forEach(c => {
+                    minimapCtx.fillStyle = c.color;
+                    minimapCtx.font = '16px Arial';
+                    minimapCtx.fillText('📦', c.x * scale + 20, c.y * scale + 25);
+                });
+                
+                coins.forEach(c => {
+                    minimapCtx.fillStyle = '#ffd966';
+                    minimapCtx.beginPath();
+                    minimapCtx.arc(c.x * scale + 25, c.y * scale + 25, 2, 0, Math.PI*2);
+                    minimapCtx.fill();
+                });
+            }
+
+            // ========== ДВИЖЕНИЕ ==========
+            function updateMovement() {
+                if (gameOver || gamePaused) return;
+
+                let currentSpeed = keys.shift ? player.runSpeed : player.speed;
+                let moveX = 0, moveY = 0;
+                
+                if (keys.w) moveY -= currentSpeed;
+                if (keys.s) moveY += currentSpeed;
+                if (keys.a) moveX -= currentSpeed;
+                if (keys.d) moveX += currentSpeed;
+
+                if (moveX !== 0 && moveY !== 0) {
+                    moveX *= 0.71;
+                    moveY *= 0.71;
+                }
+                
+                player.x = Math.max(50, Math.min(WORLD_SIZE - 50, player.x + moveX));
+                player.y = Math.max(50, Math.min(WORLD_SIZE - 50, player.y + moveY));
+                
+                cameraX = player.x - canvas.width / 2;
+                cameraY = player.y - canvas.height / 2;
+            }
+
+            // ========== КЛАВИШИ ==========
+            window.addEventListener('keydown', (e) => {
+                const key = e.key.toLowerCase();
+                
+                if (key === 'w') { keys.w = true; e.preventDefault(); }
+                if (key === 'a') { keys.a = true; e.preventDefault(); }
+                if (key === 's') { keys.s = true; e.preventDefault(); }
+                if (key === 'd') { keys.d = true; e.preventDefault(); }
+                if (key === 'shift') { keys.shift = true; e.preventDefault(); }
+                
+                if (key === 'arrowup') { keys.w = true; e.preventDefault(); }
+                if (key === 'arrowdown') { keys.s = true; e.preventDefault(); }
+                if (key === 'arrowleft') { keys.a = true; e.preventDefault(); }
+                if (key === 'arrowright') { keys.d = true; e.preventDefault(); }
+                
+                if (key === 'escape') {
+                    if (gameOver) return;
+                    
+                    if (shopOpen || upgradeOpen || forgeOpen) {
+                        shopOpen = false;
+                        upgradeOpen = false;
+                        forgeOpen = false;
+                        weaponShop.classList.remove('open');
+                        upgradeTree.classList.remove('open');
+                        forgeTree.classList.remove('open');
+                    } else {
+                        gamePaused = !gamePaused;
+                        if (gamePaused) {
+                            pauseMenu.classList.add('active');
+                        } else {
+                            pauseMenu.classList.remove('active');
+                        }
+                    }
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                const key = e.key.toLowerCase();
+                
+                if (key === 'w') keys.w = false;
+                if (key === 'a') keys.a = false;
+                if (key === 's') keys.s = false;
+                if (key === 'd') keys.d = false;
+                if (key === 'shift') keys.shift = false;
+                if (key === 'arrowup') keys.w = false;
+                if (key === 'arrowdown') keys.s = false;
+                if (key === 'arrowleft') keys.a = false;
+                if (key === 'arrowright') keys.d = false;
+            });
+
+            // ========== МЫШЬ ==========
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (e.button === 0) {
+                    mousePressed = true;
+                    e.preventDefault();
+                }
+            });
+
+            canvas.addEventListener('mouseup', (e) => {
+                if (e.button === 0) mousePressed = false;
+            });
+
+            canvas.addEventListener('mouseleave', () => {
+                mousePressed = false;
+            });
+
+            canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+            // ========== АТАКА С ЗАЧАРОВАНИЯМИ ==========
+            function performAttack() {
+                if (gameOver || !mousePressed || isAttacking || gamePaused) return;
+
+                const worldMouseX = cameraX + mouseX;
+                const worldMouseY = cameraY + mouseY;
+
+                let hitAnything = false;
+
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    const e = enemies[i];
+                    const dx = e.x - worldMouseX;
+                    const dy = e.y - worldMouseY;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist < player.attackRange) {
+                        let damage = player.baseDamage + bonusDamage;
+                        
+                        if (Math.random() < critChance) {
+                            damage *= critMultiplier;
+                        }
+                        
+                        // ПРОНЗАНИЕ
+                        if (currentEnchantments.piercing > 0) {
+                            const ench = enchantments.piercing.levels[currentEnchantments.piercing - 1];
+                            if (Math.random() * 100 < ench.chance) {
+                                damage *= ench.multiplier;
+                                // БЕЗ СООБЩЕНИЯ
+                            }
+                        }
+                        
+                        e.hp -= damage;
+                        hitAnything = true;
+                        
+                        // Звук попадания
+                        if (sounds.hit) sounds.hit.play();
+                        
+                        if (currentEnchantments.fire > 0) {
+                            const ench = enchantments.fire.levels[currentEnchantments.fire - 1];
+                            if (Math.random() * 100 < ench.chance) {
+                                activeEffects.push({
+                                    type: 'fire',
+                                    enemy: e,
+                                    damage: ench.damage,
+                                    duration: ench.duration * 60,
+                                    tickRate: 60,
+                                    lastTick: 0
+                                });
+                                // БЕЗ СООБЩЕНИЯ
+                            }
+                        }
+                        
+                        if (currentEnchantments.poison > 0) {
+                            const ench = enchantments.poison.levels[currentEnchantments.poison - 1];
+                            if (Math.random() * 100 < ench.chance) {
+                                activeEffects.push({
+                                    type: 'poison',
+                                    enemy: e,
+                                    damage: ench.damage,
+                                    duration: ench.duration * 60,
+                                    tickRate: 60,
+                                    lastTick: 0
+                                });
+                                // БЕЗ СООБЩЕНИЯ
+                            }
+                        }
+                        
+                        if (Math.random() < vampChance) {
+                            player.hp = Math.min(player.maxHp, player.hp + damage * 0.2);
+                            // БЕЗ СООБЩЕНИЯ
+                        }
+                        
+                        if (Math.random() < explosionChance) {
+                            for (let j = 0; j < enemies.length; j++) {
+                                if (i !== j) {
+                                    const other = enemies[j];
+                                    const distToExplosion = Math.sqrt(
+                                        Math.pow(other.x - e.x, 2) + 
+                                        Math.pow(other.y - e.y, 2)
+                                    );
+                                    if (distToExplosion < 100) {
+                                        other.hp -= damage * 0.4;
+                                    }
+                                }
+                            }
+                            // БЕЗ СООБЩЕНИЯ
+                        }
+                        
+                        if (e.hp <= 0) {
+                            coins.push({ x: e.x, y: e.y, value: e.reward });
+                            player.gold += e.reward;
+                            player.kills++;
+                            enemies.splice(i, 1);
+                            
+                            // Звук убийства
+                            if (sounds.kill) sounds.kill.play();
+                        }
+                    }
+                }
+
+                if (hitAnything) {
+                    isAttacking = true;
+                    attackFrame = 12;
+                    attackWorldX = worldMouseX;
+                    attackWorldY = worldMouseY;
+                    
+                    // Звук атаки
+                    if (sounds.sword) sounds.sword.play();
+                }
+            }
+
+            // ========== ОБНОВЛЕНИЕ ЭФФЕКТОВ ==========
+            function updateEffects() {
+                for (let i = activeEffects.length - 1; i >= 0; i--) {
+                    const effect = activeEffects[i];
+                    
+                    if (!enemies.includes(effect.enemy)) {
+                        activeEffects.splice(i, 1);
+                        continue;
+                    }
+                    
+                    effect.duration--;
+                    
+                    if (effect.duration <= 0) {
+                        activeEffects.splice(i, 1);
+                        continue;
+                    }
+                    
+                    effect.lastTick++;
+                    if (effect.lastTick >= effect.tickRate) {
+                        effect.lastTick = 0;
+                        effect.enemy.hp -= effect.damage;
+                        
+                        if (effect.enemy.hp <= 0) {
+                            const index = enemies.indexOf(effect.enemy);
+                            if (index > -1) {
+                                coins.push({ x: effect.enemy.x, y: effect.enemy.y, value: effect.enemy.reward });
+                                player.gold += effect.enemy.reward;
+                                player.kills++;
+                                enemies.splice(index, 1);
+                            }
+                            activeEffects.splice(i, 1);
+                        }
+                    }
+                }
+            }
+
+            // ========== ОБНОВЛЕНИЕ ==========
+            function updateGame() {
+                if (gameOver || gamePaused) return;
+
+                updateMovement();
+                updateEffects();
+                
+                // Спавн сундуков раз в 30 секунд
+                chestSpawnTimer++;
+                if (chestSpawnTimer >= CHEST_SPAWN_INTERVAL) {
+                    chestSpawnTimer = 0;
+                    spawnChest();
+                }
+
+                if (!waveActive && enemies.length === 0) {
+                    if (waveTimer > 0) {
+                        waveTimer--;
+                    } else {
+                        startNextWave();
+                    }
+                }
+
+                checkWaveComplete();
+
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    const e = enemies[i];
+                    
+                    const dx = player.x - e.x;
+                    const dy = player.y - e.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (dist > 5) {
+                        e.x += (dx / dist) * e.speed;
+                        e.y += (dy / dist) * e.speed;
+                    }
+
+                    if (dist < 40 && invincibleFrames === 0) {
+                        if (Math.random() < blockChance) {
+                            // БЕЗ СООБЩЕНИЯ
+                        } else {
+                            const damage = Math.max(2, e.attack - player.defense);
+                            player.hp -= damage;
+                        }
+                        invincibleFrames = 20;
+                        
+                        if (player.hp <= 0) {
+                            player.hp = 0;
+                            gameOver = true;
+                            showGameOver();
+                        }
+                    }
+                }
+
+                for (let i = coins.length - 1; i >= 0; i--) {
+                    const c = coins[i];
+                    const dx = player.x - c.x;
+                    const dy = player.y - c.y;
+                    
+                    if (Math.sqrt(dx*dx + dy*dy) < 35) {
+                        player.gold += c.value;
+                        coins.splice(i, 1);
+                    }
+                }
+
+                for (let i = chests.length - 1; i >= 0; i--) {
+                    const c = chests[i];
+                    const dx = player.x - c.x;
+                    const dy = player.y - c.y;
+                    
+                    if (Math.sqrt(dx*dx + dy*dy) < 40 && !c.opened && !gamePaused) {
+                        openChest(c);
+                    }
+                }
+
+                if (invincibleFrames > 0) invincibleFrames--;
+                if (isAttacking) {
+                    attackFrame--;
+                    if (attackFrame <= 0) isAttacking = false;
+                }
+                
+                drawMinimap();
+            }
+            
+            // ========== ПОКАЗАТЬ МЕНЮ СМЕРТИ ==========
+            function showGameOver() {
+                gameoverWave.textContent = currentWave;
+                gameoverKills.textContent = player.kills;
+                gameoverGold.textContent = player.gold;
+                gameoverMenu.classList.add('active');
+            }
+
+            // ========== ОТРИСОВКА ==========
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.save();
+                ctx.translate(-cameraX, -cameraY);
+
+                // Сетка
+                ctx.strokeStyle = '#5f9ea033';
+                ctx.lineWidth = 2;
+                
+                const startX = Math.floor(cameraX / 100) * 100;
+                const startY = Math.floor(cameraY / 100) * 100;
+                const endX = cameraX + canvas.width + 100;
+                const endY = cameraY + canvas.height + 100;
+                
+                for (let x = startX; x < endX; x += 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#88bbdd22';
+                    ctx.moveTo(x, startY);
+                    ctx.lineTo(x, endY);
+                    ctx.stroke();
+                }
+                
+                for (let y = startY; y < endY; y += 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, y);
+                    ctx.lineTo(endX, y);
+                    ctx.stroke();
+                }
+
+                // Монеты
+                for (const c of coins) {
+                    if (Math.abs(c.x - cameraX) > canvas.width + 100 || 
+                        Math.abs(c.y - cameraY) > canvas.height + 100) continue;
+                    
+                    ctx.shadowColor = '#ffcc00';
+                    ctx.shadowBlur = 25;
+                    
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, 12, 0, Math.PI*2);
+                    ctx.fillStyle = '#f7cf5a';
+                    ctx.fill();
+                    
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = '#000';
+                    ctx.font = 'bold 14px monospace';
+                    ctx.fillText('💰', c.x-16, c.y-12);
+                    
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px monospace';
+                    ctx.fillText(c.value, c.x-6, c.y+5);
+                }
+
+                // Сундуки
+                for (const c of chests) {
+                    if (c.opened) continue;
+                    
+                    ctx.shadowColor = c.color;
+                    ctx.shadowBlur = 30;
+                    
+                    ctx.font = '48px Arial';
+                    ctx.fillStyle = c.color;
+                    ctx.fillText(c.emoji, c.x-24, c.y-12);
+                    
+                    ctx.shadowBlur = 0;
+                    ctx.font = '16px monospace';
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(c.name, c.x-40, c.y-40);
+                }
+
+                // Враги
+                for (const e of enemies) {
+                    if (Math.abs(e.x - cameraX) > canvas.width + 100 || 
+                        Math.abs(e.y - cameraY) > canvas.height + 100) continue;
+                    
+                    ctx.shadowColor = e.isBoss ? '#8a2be2' : '#8b0000';
+                    ctx.shadowBlur = e.isBoss ? 60 : 30;
+                    
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, e.size/2, 0, Math.PI*2);
+                    ctx.fillStyle = e.color;
+                    ctx.fill();
+                    
+                    ctx.shadowBlur = 0;
+                    
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(e.x-15, e.y-20, e.isBoss ? 12 : 7, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(e.x+15, e.y-20, e.isBoss ? 12 : 7, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#d43f3f';
+                    ctx.beginPath();
+                    ctx.arc(e.x-15, e.y-20, e.isBoss ? 8 : 4, 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(e.x+15, e.y-20, e.isBoss ? 8 : 4, 0, Math.PI*2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#333';
+                    ctx.fillRect(e.x-40, e.y-50, 80, 12);
+                    
+                    ctx.fillStyle = e.isBoss ? '#ff4d4d' : '#e74c3c';
+                    const hpPercent = e.hp / e.maxHp;
+                    ctx.fillRect(e.x-40, e.y-50, 80 * hpPercent, 12);
+                    
+                    if (e.isBoss) {
+                        ctx.fillStyle = '#ffd700';
+                        ctx.font = 'bold 20px monospace';
+                        ctx.fillText(`👑 БОСС ${e.bossNumber}`, e.x-60, e.y-70);
+                    } else {
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 14px monospace';
+                        ctx.fillText(`🌊${currentWave}`, e.x-15, e.y-65);
+                    }
+                }
+
+                // Игрок
+                ctx.shadowColor = '#00a6ff';
+                ctx.shadowBlur = 40;
+                
+                ctx.fillStyle = '#3a8fe0';
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, 24, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.shadowBlur = 0;
+                
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(player.x-8, player.y-10, 7, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(player.x+8, player.y-10, 7, 0, Math.PI*2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#1e3d5e';
+                ctx.beginPath();
+                ctx.arc(player.x-8, player.y-10, 4, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(player.x+8, player.y-10, 4, 0, Math.PI*2);
+                ctx.fill();
+
+                // Оружие с иконками зачарований
+                ctx.font = '48px Arial';
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#ffaa00';
+                ctx.fillText(weapons[currentWeaponIndex].emoji, player.x + 25, player.y - 20);
+                
+                // Иконки зачарований
+                let enchantX = player.x + 30;
+                if (currentEnchantments.piercing > 0) {
+                    ctx.font = '24px Arial';
+                    ctx.fillStyle = '#ffd966';
+                    ctx.fillText('⚡', enchantX, player.y - 45);
+                    ctx.font = '16px monospace';
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(currentEnchantments.piercing, enchantX + 15, player.y - 50);
+                    enchantX += 35;
+                }
+                if (currentEnchantments.fire > 0) {
+                    ctx.font = '24px Arial';
+                    ctx.fillStyle = '#ff6b4f';
+                    ctx.fillText('🔥', enchantX, player.y - 45);
+                    ctx.font = '16px monospace';
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(currentEnchantments.fire, enchantX + 15, player.y - 50);
+                    enchantX += 35;
+                }
+                if (currentEnchantments.poison > 0) {
+                    ctx.font = '24px Arial';
+                    ctx.fillStyle = '#6fbf4f';
+                    ctx.fillText('☠️', enchantX, player.y - 45);
+                    ctx.font = '16px monospace';
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(currentEnchantments.poison, enchantX + 15, player.y - 50);
+                }
+
+                if (blockChance > 0) {
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, 35, 0, Math.PI*2);
+                    ctx.strokeStyle = '#c56bff';
+                    ctx.lineWidth = 4;
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    ctx.fillStyle = '#c56bff30';
+                    ctx.fill();
+                }
+
+                if (critChance > 0) {
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, 45, 0, Math.PI*2);
+                    ctx.strokeStyle = '#ffaa00';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([10, 10]);
+                    ctx.stroke();
+                }
+
+                if (vampChance > 0) {
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, 55, 0, Math.PI*2);
+                    ctx.strokeStyle = '#ff4f4f';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([15, 5]);
+                    ctx.stroke();
+                }
+
+                ctx.beginPath();
+                ctx.arc(player.x, player.y, player.attackRange, 0, Math.PI*2);
+                ctx.strokeStyle = '#fff5b0';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 10]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                if (isAttacking) {
+                    ctx.shadowBlur = 40;
+                    ctx.shadowColor = '#ffaa00';
+                    ctx.lineWidth = 8;
+                    
+                    for (let i = 0; i < 5; i++) {
+                        const alpha = 1 - i * 0.15;
+                        ctx.strokeStyle = `rgba(255, 240, 150, ${alpha})`;
+                        
+                        ctx.beginPath();
+                        ctx.ellipse(attackWorldX, attackWorldY, 50 + i*12, 30 + i*8, 0, 0, Math.PI*2);
+                        ctx.stroke();
+                    }
+
+                    ctx.shadowBlur = 50;
+                    ctx.fillStyle = '#ffffb0';
+                    ctx.beginPath();
+                    ctx.arc(attackWorldX, attackWorldY, 25, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                const worldMouseX = cameraX + mouseX;
+                const worldMouseY = cameraY + mouseY;
+                
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 3;
+                
+                ctx.beginPath();
+                ctx.moveTo(worldMouseX-20, worldMouseY-20);
+                ctx.lineTo(worldMouseX-10, worldMouseY-10);
+                ctx.moveTo(worldMouseX+20, worldMouseY-20);
+                ctx.lineTo(worldMouseX+10, worldMouseY-10);
+                ctx.moveTo(worldMouseX-20, worldMouseY+20);
+                ctx.lineTo(worldMouseX-10, worldMouseY+10);
+                ctx.moveTo(worldMouseX+20, worldMouseY+20);
+                ctx.lineTo(worldMouseX+10, worldMouseY+10);
+                ctx.stroke();
+
+                if (keys.shift) {
+                    ctx.fillStyle = '#ffffff50';
+                    ctx.font = 'bold 28px monospace';
+                    ctx.fillText('🏃 БЕГ', player.x-60, player.y-70);
+                }
+
+                if (!waveActive && enemies.length === 0 && waveTimer > 0 && !bossActive) {
+                    ctx.fillStyle = '#ffffff80';
+                    ctx.font = 'bold 36px monospace';
+                    ctx.fillText(`Следующая волна: ${Math.ceil(waveTimer/60)}с`, player.x-150, player.y-150);
+                }
+
+                if (invincibleFrames > 0) {
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(cameraX, cameraY, canvas.width, canvas.height);
+                    ctx.globalAlpha = 1;
+                }
+
+                ctx.restore();
+            }
+
+            // ========== UI ==========
+            function updateUI() {
+                document.getElementById('goldDisplay').innerText = '💰 ' + player.gold;
+                
+                const hpPercent = (player.hp / player.maxHp) * 100;
+                document.getElementById('hpBar').style.width = Math.max(0, hpPercent) + '%';
+                
+                document.getElementById('damageStat').innerText = player.baseDamage + bonusDamage;
+                document.getElementById('rangeStat').innerText = player.attackRange;
+                document.getElementById('defenseStat').innerText = player.defense;
+                document.getElementById('killsStat').innerText = player.kills;
+                document.getElementById('speedStat').innerText = player.speed.toFixed(1);
+            }
+
+            // ========== СБРОС ==========
+            function resetGame() {
+                player = {
+                    x: WORLD_SIZE/2, y: WORLD_SIZE/2,
+                    hp: 100, maxHp: 100,
+                    baseDamage: weapons[0].damage,
+                    attackRange: weapons[0].range,
+                    defense: 2,
+                    speed: 5,
+                    runSpeed: 9,
+                    gold: 150,
+                    kills: 0
+                };
+                
+                bonusMaxHp = 0;
+                bonusDamage = 0;
+                blockChance = 0;
+                goldMultiplier = 1.0;
+                speedMultiplier = 1.0;
+                critChance = 0;
+                critMultiplier = 2.0;
+                vampChance = 0;
+                explosionChance = 0;
+                
+                currentEnchantments = {
+                    piercing: 0,
+                    fire: 0,
+                    poison: 0
+                };
+                
+                activeEffects = [];
+                
+                Object.keys(upgrades).forEach(key => {
+                    upgrades[key].currentLevel = 0;
+                });
+                
+                enemies = [];
+                coins = [];
+                chests = [];
+                gameOver = false;
+                gamePaused = false;
+                invincibleFrames = 0;
+                chestSpawnTimer = 0;
+                currentWeaponIndex = 0;
+                bossActive = false;
+                bossEnemy = null;
+                
+                currentWave = 1;
+                waveActive = false;
+                waveTimer = 30;
+                
+                shopOpen = false;
+                upgradeOpen = false;
+                forgeOpen = false;
+                minimapActive = false;
+                minimap.classList.remove('active');
+                weaponShop.classList.remove('open');
+                upgradeTree.classList.remove('open');
+                forgeTree.classList.remove('open');
+                pauseMenu.classList.remove('active');
+                gameoverMenu.classList.remove('active');
+                
+                // Начальные сундуки
+                for (let i = 0; i < 2; i++) {
+                    spawnChest();
+                }
+                
+                createWeaponShop();
+                updateWeaponSelection();
+                updateUpgradeTree();
+                updateWaveDisplay();
+                updateUI();
+                
+                // БЕЗ СООБЩЕНИЯ
+            }
+
+            // ========== ИГРОВОЙ ЦИКЛ ==========
+            function gameLoop() {
+                if (!gameOver && !gamePaused) {
+                    performAttack();
+                    updateGame();
+                    updateUI();
+                }
+                draw();
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // Старт
+            createWeaponShop();
+            updateUpgradeTree();
+            resetGame();
+            gameLoop();
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a365d">
+    <title>Пенальти ⚽</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Start Scene -->
+        <div id="scene-start" class="scene active">
+            <div class="start-container">
+                <h1>⚽ ПЕН АЛЬТИ ⚽</h1>
+                <div class="start-desc">
+                    <p>Тапни по зоне ворот</p>
+                    <p>Забей как можно больше за 45 секунд!</p>
+                </div>
+                <button id="btn-start" class="btn-primary">НАЧАТЬ</button>
+                <div id="best-score" class="best-score"></div>
+            </div>
+        </div>
+
+        <!-- Play Scene -->
+        <div id="scene-play" class="scene">
+            <div class="game-ui">
+                <div class="score-container">
+                    <span class="score-label">ГОЛЫ:</span>
+                    <span id="score-value" class="score-value">0</span>
+                </div>
+                <div class="timer-container">
+                    <span class="timer-label">ВРЕМЯ:</span>
+                    <span id="timer-value" class="timer-value">45</span>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="goalkeeper-container">
+                    <div id="goalkeeper" class="goalkeeper"></div>
+                </div>
+                
+                <div class="goal">
+                    <div class="goal-post left"></div>
+                    <div class="goal-post right"></div>
+                    <div class="goal-net"></div>
+                    
+                    <div class="zones">
+                        <div id="zone-top-left" class="zone top-left" data-zone="top-left"></div>
+                        <div id="zone-top-center" class="zone top-center" data-zone="top-center"></div>
+                        <div id="zone-top-right" class="zone top-right" data-zone="top-right"></div>
+                        <div id="zone-bottom-left" class="zone bottom-left" data-zone="bottom-left"></div>
+                        <div id="zone-bottom-center" class="zone bottom-center" data-zone="bottom-center"></div>
+                        <div id="zone-bottom-right" class="zone bottom-right" data-zone="bottom-right"></div>
+                    </div>
+                </div>
+
+                <div id="ball" class="ball"></div>
+            </div>
+        </div>
+
+        <!-- Result Scene -->
+        <div id="scene-result" class="scene">
+            <div class="result-container">
+                <h2>РЕЗУЛЬТАТ</h2>
+                <div class="result-score">
+                    <span class="result-number" id="result-score">0</span>
+                    <span class="result-label">ГОЛОВ</span>
+                </div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">УДАРОВ:</span>
+                        <span id="result-attempts" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ТОЧНОСТЬ:</span>
+                        <span id="result-accuracy" class="stat-value">0%</span>
+                    </div>
+                </div>
+                <div class="result-buttons">
+                    <button id="btn-replay" class="btn-primary">ЕЩЁ РАЗ</button>
+                    <button id="btn-share" class="btn-secondary">ПОДЕЛИТЬСЯ</button>
+                </div>
+                <div id="result-new-record" class="result-record"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="config.js"></script>
+    <script src="src/core/utils.js"></script>
+    <script src="src/core/engine.js"></script>
+    <script src="src/core/timer.js"></script>
+    <script src="src/core/input.js"></script>
+    <script src="src/core/audio.js"></script>
+    <script src="src/core/storage.js"></script>
+    <script src="src/game/state.js"></script>
+    <script src="src/game/rules.js"></script>
+    <script src="src/game/entities.js"></script>
+    <script src="src/game/ui.js"></script>
+    <script src="src/game/scenes.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

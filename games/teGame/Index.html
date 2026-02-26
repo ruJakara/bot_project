@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лавовый Прыгун</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght:400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="particles"></div>
+
+    <!-- Главное меню -->
+    <div id="mainMenu" class="menu active">
+        <h1 class="game-title">ЛАВОВЫЙ<br>ПРЫГУН</h1>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="showPlayMenu()">ИГРАТЬ</button>
+            <button class="menu-btn" onclick="showSettings()">НАСТРОЙКИ</button>
+            <button class="menu-btn" onclick="exitGame()">ВЫЙТИ</button>
+        </div>
+        <div class="coins-display">💰 <span id="totalCoins">0</span></div>
+    </div>
+
+    <!-- Меню игры -->
+    <div id="playMenu" class="menu">
+        <h2 class="menu-title">ИГРАТЬ</h2>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="startGame()">НАЧАТЬ ИГРУ</button>
+            <button class="menu-btn" onclick="showDifficulty()">СЛОЖНОСТЬ</button>
+            <button class="menu-btn" onclick="showUpgrades()">УЛУЧШЕНИЯ</button>
+            <button class="menu-btn secondary" onclick="showMainMenu()">НАЗАД</button>
+        </div>
+    </div>
+
+    <!-- Меню сложности -->
+    <div id="difficultyMenu" class="menu">
+        <h2 class="menu-title">ВЫБЕРИ СЛОЖНОСТЬ</h2>
+        <div class="difficulty-info">
+            <p>Текущая: <span id="currentDifficulty">ЛЕГКО</span></p>
+            <p>Множитель монет: <span id="coinMultiplier">x1.0</span></p>
+        </div>
+        <div class="menu-buttons">
+            <button class="menu-btn difficulty-btn" onclick="setDifficulty('easy')">ЛЕГКО (x1.0)</button>
+            <button class="menu-btn difficulty-btn" onclick="setDifficulty('normal')">НОРМАЛЬНО (x1.5)</button>
+            <button class="menu-btn difficulty-btn" onclick="setDifficulty('hard')">СЛОЖНО (x2.0)</button>
+            <button class="menu-btn difficulty-btn" onclick="setDifficulty('extreme')">ЭКСТРИМ (x3.0)</button>
+            <button class="menu-btn secondary" onclick="showPlayMenu()">НАЗАД</button>
+        </div>
+    </div>
+
+    <!-- Меню улучшений -->
+    <div id="upgradesMenu" class="menu">
+        <h2 class="menu-title">УЛУЧШЕНИЯ</h2>
+        <div class="coins-display">💰 <span id="upgradeCoins">0</span></div>
+        <div class="upgrades-grid">
+            <div class="upgrade-card">
+                <h3>🦘 СУПЕР ПРЫЖОК</h3>
+                <p>Увеличивает высоту прыжка на 20%</p>
+                <p class="upgrade-level">Уровень: <span id="jumpLevel">0</span>/5</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('jump')">Купить (50💰)</button>
+            </div>
+            <div class="upgrade-card">
+                <h3>❤️ ДОПОЛНИТЕЛЬНАЯ ЖИЗНЬ</h3>
+                <p>Начинай с дополнительной жизнью</p>
+                <p class="upgrade-level">Уровень: <span id="lifeLevel">0</span>/3</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('life')">Купить (100💰)</button>
+            </div>
+            <div class="upgrade-card">
+                <h3>🛡️ ЩИТ</h3>
+                <p>Защита от лавы на 5 секунд</p>
+                <p class="upgrade-level">Уровень: <span id="shieldLevel">0</span>/3</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('shield')">Купить (150💰)</button>
+            </div>
+            <div class="upgrade-card">
+                <h3>💰 МАГНИТ МОНЕТ</h3>
+                <p>Собирай монеты с большего расстояния</p>
+                <p class="upgrade-level">Уровень: <span id="magnetLevel">0</span>/5</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('magnet')">Купить (75💰)</button>
+            </div>
+            <div class="upgrade-card">
+                <h3>⚡ ЗАМЕДЛЕНИЕ ВРЕМЕНИ</h3>
+                <p>Лава поднимается медленнее первые 10 сек</p>
+                <p class="upgrade-level">Уровень: <span id="slowLevel">0</span>/3</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('slow')">Купить (120💰)</button>
+            </div>
+            <div class="upgrade-card">
+                <h3>🎯 ДВОЙНОЙ ПРЫЖОК</h3>
+                <p>Возможность прыгнуть в воздухе</p>
+                <p class="upgrade-level">Уровень: <span id="doubleJumpLevel">0</span>/1</p>
+                <button class="upgrade-btn" onclick="buyUpgrade('doubleJump')">Купить (200💰)</button>
+            </div>
+        </div>
+        <button class="menu-btn secondary" onclick="showPlayMenu()">НАЗАД</button>
+    </div>
+
+    <!-- Настройки -->
+    <div id="settingsMenu" class="menu">
+        <h2 class="menu-title">НАСТРОЙКИ</h2>
+        <div class="settings-grid">
+            <div class="setting-item">
+                <label>Звук</label>
+                <button class="toggle-btn" id="soundToggle" onclick="toggleSound()">ВКЛ</button>
+            </div>
+            <div class="setting-item">
+                <label>Частицы</label>
+                <button class="toggle-btn" id="particlesToggle" onclick="toggleParticles()">ВКЛ</button>
+            </div>
+            <div class="setting-item">
+                <label>Качество графики</label>
+                <select id="qualitySelect" onchange="changeQuality()">
+                    <option value="high">ВЫСОКОЕ</option>
+                    <option value="medium">СРЕДНЕЕ</option>
+                    <option value="low">НИЗКОЕ</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label>Показывать FPS</label>
+                <button class="toggle-btn" id="fpsToggle" onclick="toggleFPS()">ВЫКЛ</button>
+            </div>
+        </div>
+        <button class="menu-btn secondary" onclick="showMainMenu()">НАЗАД</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="gameScreen">
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameUI">
+            <div class="game-stats">
+                <div>Счёт: <span id="score">0</span></div>
+                <div>Монеты: <span id="gameCoins">0</span></div>
+                <div>Жизни: <span id="lives">❤️❤️❤️</span></div>
+            </div>
+            <div id="fpsCounter" style="display: none;">FPS: <span id="fps">60</span></div>
+            <button class="pause-btn" onclick="pauseGame()">⏸️</button>
+        </div>
+        <div id="pauseMenu" class="pause-overlay">
+            <h2>ПАУЗА</h2>
+            <button class="menu-btn" onclick="resumeGame()">ПРОДОЛЖИТЬ</button>
+            <button class="menu-btn secondary" onclick="quitToMenu()">В МЕНЮ</button>
+        </div>
+        <div id="gameOverMenu" class="pause-overlay">
+            <h2>ИГРА ОКОНЧЕНА</h2>
+            <p class="final-score">Счёт: <span id="finalScore">0</span></p>
+            <p class="final-coins">Заработано: <span id="earnedCoins">0</span>💰</p>
+            <button class="menu-btn" onclick="restartGame()">ЕЩЁ РАЗ</button>
+            <button class="menu-btn secondary" onclick="quitToMenu()">В МЕНЮ</button>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

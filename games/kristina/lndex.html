@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Хомячковый Отель</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    @keyframes floatUp {
+        0% { opacity: 1; transform: translateY(0) scale(1); }
+        100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+    }
+    
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: scale(0.5); }
+        50% { opacity: 1; transform: scale(1.1); }
+        100% { opacity: 0; transform: scale(1); }
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes wiggle {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(5deg); }
+        75% { transform: rotate(-5deg); }
+    }
+    
+    .pulse {
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+    <div id="app">
+        <!-- Стартовый экран -->
+        <div id="startScreen" class="screen active">
+            <div class="container">
+                <h1><i class="fas fa-hotel"></i> Хомячковый Отель</h1>
+                <p class="description">Принимайте хомячков в номера и зарабатывайте монеты!</p>
+                <div class="instructions">
+                    <h3>Как играть:</h3>
+                    <ul>
+                        <li><i class="fas fa-hamster"></i> Хомячки приходят и просят номер</li>
+                        <li><i class="fas fa-bed"></i> Разместите их в свободном номере</li>
+                        <li><i class="fas fa-coins"></i> За каждого хомячка вы получите 2 монеты</li>
+                        <li><i class="fas fa-unlock"></i> Открывайте новые номера за монеты</li>
+                        <li><i class="fas fa-stopwatch"></i> У вас есть 60 секунд!</li>
+                    </ul>
+                </div>
+                <button id="startBtn" class="btn">
+                    <i class="fas fa-play"></i> Начать игру
+                </button>
+                <div class="credits">
+                    <p><i class="fas fa-heart"></i> создал: Кристина 11 лет</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="stats">
+                    <div class="stat">
+                        <i class="fas fa-clock"></i>
+                        <span id="timer">60</span> сек
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-coins"></i>
+                        <span id="coins">0</span> монет
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-content">
+                <div class="hotel">
+                    <h2><i class="fas fa-building"></i> Отель "Для Хомячков"</h2>
+                    <div id="rooms" class="rooms-container">
+                        <!-- Номера будут генерироваться через JS -->
+                    </div>
+                </div>
+                
+                <div class="queue-section">
+                    <h3><i class="fas fa-users"></i> Очередь хомячков</h3>
+                    <div id="hamsterQueue" class="queue-container">
+                        <!-- Хомячки в очереди будут генерироваться через JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="menuBtn" class="btn btn-small">
+                    <i class="fas fa-home"></i> Меню
+                </button>
+            </div>
+        </div>
+
+        <!-- Экран результатов -->
+        <div id="resultScreen" class="screen">
+            <div class="container">
+                <h1><i class="fas fa-trophy"></i> Результаты игры</h1>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <i class="fas fa-coins"></i>
+                        <div class="result-value" id="finalCoins">0</div>
+                        <div class="result-label">монет заработано</div>
+                    </div>
+                    <div class="result-stat">
+                        <i class="fas fa-hamster"></i>
+                        <div class="result-value" id="finalHamsters">0</div>
+                        <div class="result-label">хомячков обслужено</div>
+                    </div>
+                    <div class="result-stat">
+                        <i class="fas fa-door-open"></i>
+                        <div class="result-value" id="finalRooms">1</div>
+                        <div class="result-label">номеров открыто</div>
+                    </div>
+                </div>
+                
+                <div class="result-message" id="resultMessage"></div>
+                
+                <div class="result-buttons">
+                    <button id="restartBtn" class="btn">
+                        <i class="fas fa-redo"></i> Играть снова
+                    </button>
+                    <button id="menuBtn2" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Главное меню
+                    </button>
+                </div>
+                
+                <div class="credits">
+                    <p><i class="fas fa-heart"></i> создал: Кристина 11 лет</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

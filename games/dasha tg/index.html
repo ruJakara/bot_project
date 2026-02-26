@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тетрис - Ксюша 11 лет</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Стартовый экран -->
+        <div id="start-screen" class="screen active">
+            <div class="game-title">ТЕТРИС</div>
+            <div class="subtitle">Залипательная игра до проигрыша</div>
+            <div class="creator">Создала: Ксюша 11 лет</div>
+            <div class="instructions">
+                <h3>Как играть:</h3>
+                <p>• Используйте кнопки для управления</p>
+                <p>• Соберите линии, чтобы получить очки</p>
+                <p>• Игра идет пока есть свободное место</p>
+                <p>• Управление: кнопки или клавиши со стрелками</p>
+            </div>
+            <button id="start-btn" class="btn">Начать игру</button>
+        </div>
+
+        <!-- Игровой экран -->
+        <div id="game-screen" class="screen">
+            <header class="game-header">
+                <div class="score-board">
+                    <div class="score-item">
+                        <span>Очки:</span>
+                        <span id="score">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>Линии:</span>
+                        <span id="lines">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span>Уровень:</span>
+                        <span id="level">1</span>
+                    </div>
+                </div>
+            </header>
+            
+            <main class="game-area">
+                <div class="game-grid-container">
+                    <canvas id="game-canvas"></canvas>
+                </div>
+                
+                <div class="controls">
+                    <button id="rotate-btn" class="control-btn">
+                        <span>↻</span>
+                        <span>Повернуть</span>
+                    </button>
+                    <button id="drop-btn" class="control-btn">
+                        <span>↓</span>
+                        <span>Сбросить</span>
+                    </button>
+                </div>
+                
+                <div class="next-piece">
+                    <h3>Следующая:</h3>
+                    <canvas id="next-canvas"></canvas>
+                </div>
+            </main>
+            
+            <button id="back-btn" class="btn small">В меню</button>
+        </div>
+
+        <!-- Экран результатов -->
+        <div id="result-screen" class="screen">
+            <div class="result-title">Игра окончена!</div>
+            <div class="result-stats">
+                <div class="stat">
+                    <span>Итоговый счет:</span>
+                    <span id="final-score">0</span>
+                </div>
+                <div class="stat">
+                    <span>Линий собрано:</span>
+                    <span id="final-lines">0</span>
+                </div>
+                <div class="stat">
+                    <span>Уровень:</span>
+                    <span id="final-level">1</span>
+                </div>
+            </div>
+            <div class="game-over-reason">
+                <p id="game-over-message">Игра завершена!</p>
+            </div>
+            <button id="restart-btn" class="btn">Играть снова</button>
+            <button id="share-btn" class="btn secondary">Поделиться результатом</button>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="game.js"></script>
+    <script src="api.js"></script>
+</body>
+</html>
