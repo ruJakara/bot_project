@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy All Bots",
+      "type": "shell",
+      "command": "/opt/bots/deploy-all.sh",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Deploy bot_project",
+      "type": "shell",
+      "command": "cd /opt/bots/bot_project && ./deploy.sh",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy botfinder",
+      "type": "shell",
+      "command": "cd /opt/bots/botfinder && ./deploy.sh",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Status all bots",
+      "type": "shell",
+      "command": "systemctl status kiberone-bot kiberone-botfinder --no-pager",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}
